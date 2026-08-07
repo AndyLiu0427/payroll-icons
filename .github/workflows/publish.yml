@@ -33,20 +33,35 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Can the token reach the scope we publish under?
+      # Advisory only. There is no read-only call that proves "this token may
+      # publish to this scope": `npm access list packages` also fails when the
+      # scope is simply empty, and when the token has no organisation read
+      # permission — which is the recommended setting for a publish-only token.
+      # The token's own configuration page is the authority; this step exists to
+      # surface npm's actual error, not to pass judgement.
+      - name: Scope diagnostics
+        continue-on-error: true
         run: |
           SCOPE=$(node -p "require('./package.json').name.split('/')[0]")
           NAME=$(node -p "require('./package.json').name")
           echo "package: $NAME"
           if [ "${SCOPE#@}" = "$SCOPE" ]; then
+            echo
             echo "Unscoped package. A granular token cannot create an unscoped"
             echo "package that does not exist yet — publish the first version"
             echo "from a workstation, then let CI take over."
             exit 0
           fi
           echo "scope:   $SCOPE"
-          npm access list packages "$SCOPE" \
-            || echo "No access to $SCOPE — the org may not exist, or the token was not granted it."
+          echo
+          echo "--- npm access list packages $SCOPE ---"
+          npm access list packages "$SCOPE" || true
+          echo
+          echo "--- npm org ls ${SCOPE#@} ---"
+          npm org ls "${SCOPE#@}" || true
+          echo
+          echo "An error above does not mean the release will fail: an empty"
+          echo "scope and a token without organisation read both look like this."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
