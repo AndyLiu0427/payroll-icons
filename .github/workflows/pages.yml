@@ -1,8 +1,12 @@
 name: Docs
 
+# Manual only while the repository is private — GitHub Pages needs a paid plan
+# for private repos, so an automatic push trigger would fail on every commit.
+# Restore the `push` trigger below when the repository goes public.
+#
+#   push:
+#     branches: [main]
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
