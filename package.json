@@ -1,0 +1,79 @@
+{
+  "name": "@octomate/payroll-icons",
+  "version": "0.1.0",
+  "description": "Payroll, time, statutory and billing icons built from a base × modifier system. 24×24, stroke, currentColor, animation-ready.",
+  "keywords": [
+    "icons",
+    "svg",
+    "react",
+    "payroll",
+    "billing",
+    "invoice",
+    "hr",
+    "fintech"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./registry": {
+      "types": "./dist/generated/registry.d.ts",
+      "default": "./dist/generated/registry.js"
+    },
+    "./paths": {
+      "types": "./dist/generated/paths.d.ts",
+      "default": "./dist/generated/paths.js"
+    },
+    "./animate.css": "./dist/animate.css",
+    "./svg/*": "./dist/svg/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "icons": "node scripts/build.mjs",
+    "icons:free": "node scripts/build.mjs --tier free",
+    "prebuild": "npm run icons",
+    "build": "tsc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
+    "build:free": "npm run icons:free && tsc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
+    "dev": "npm run icons && vite --config vite.config.demo.ts",
+    "demo:build": "npm run icons && vite build --config vite.config.demo.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "svgo": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^7.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

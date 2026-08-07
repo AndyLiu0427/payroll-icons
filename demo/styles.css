@@ -1,0 +1,303 @@
+/*
+ * Demo styling. Carries the drafting-sheet look of the construction plates so
+ * the docs site and the specimen sheets read as one system.
+ */
+
+:root {
+  --paper: #f6f7f4;
+  --ink: #191d1a;
+  --muted: #697068;
+  --hairline: #dce0d8;
+  --redline: #b23a2b;
+  --field: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #111413;
+    --ink: #e6eae3;
+    --muted: #848c82;
+    --hairline: #262b27;
+    --redline: #e4705e;
+    --field: #171b19;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+code {
+  font-family: inherit;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  padding: 1px 5px;
+}
+
+.sheet {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+}
+
+/* ---------- title block ---------- */
+
+.titleblock {
+  border: 1px solid var(--ink);
+}
+
+.titleblock__main {
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.titleblock h1 {
+  margin: 0;
+  font-size: clamp(24px, 4.4vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.titleblock p {
+  margin: 10px 0 0;
+  max-width: 64ch;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.fields {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.field {
+  padding: 9px 14px;
+  border-right: 1px solid var(--hairline);
+  min-width: 0;
+}
+
+.field:last-child {
+  border-right: 0;
+}
+
+.field dt {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field dd {
+  margin: 3px 0 0;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .field:nth-child(2) {
+    border-right: 0;
+  }
+  .field:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--hairline);
+  }
+}
+
+/* ---------- controls ---------- */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px dashed var(--hairline);
+  background: var(--field);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.search {
+  flex: 1 1 260px;
+  min-width: 0;
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  padding: 6px 10px;
+}
+
+.search:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--redline);
+  outline-offset: 2px;
+}
+
+.ctrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ctrl__label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button {
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
+}
+
+button:hover {
+  border-color: var(--ink);
+}
+
+button[aria-pressed="true"] {
+  border-color: var(--redline);
+  color: var(--redline);
+  background: color-mix(in srgb, var(--redline) 7%, transparent);
+}
+
+/* ---------- groups ---------- */
+
+.group {
+  margin-top: 34px;
+}
+
+.grouphead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+}
+
+.grouphead > span:last-child {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  border-left: 1px solid var(--hairline);
+}
+
+/* ---------- cells ---------- */
+
+.cell {
+  position: relative;
+  border: 0;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--field);
+  padding: 20px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cell:hover {
+  background: color-mix(in srgb, var(--redline) 5%, var(--field));
+  border-color: var(--hairline);
+}
+
+.cell__art {
+  height: 44px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+}
+
+.cell__name {
+  font-size: 11.5px;
+  word-break: break-word;
+}
+
+.cell__zh {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.cell__formula {
+  font-size: 10px;
+  color: var(--redline);
+}
+
+.cell__tier {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--redline);
+  border: 1px solid color-mix(in srgb, var(--redline) 40%, transparent);
+  padding: 0 4px;
+}
+
+.cell__copied {
+  position: absolute;
+  inset: auto 0 0;
+  background: var(--redline);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 0;
+  letter-spacing: 0.06em;
+}
+
+.empty {
+  margin-top: 40px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--muted);
+}
+
+/* ---------- footer ---------- */
+
+.footnote {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ink);
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+}
