@@ -27,6 +27,7 @@ export default function App() {
   const [tier, setTier] = useState<"all" | "free" | "pro">("all");
   const [copied, setCopied] = useState<string | null>(null);
   const [replayKey, setReplayKey] = useState(0);
+  const [compare, setCompare] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -148,8 +149,36 @@ export default function App() {
               Replay ↻
             </button>
           )}
+          <button type="button" aria-pressed={compare} onClick={() => setCompare((c) => !c)}>
+            16px compare
+          </button>
         </div>
       </div>
+
+      {compare && (
+        <section className="compare">
+          <div className="grouphead">
+            <span>Optical size — 16px master vs the 24px master scaled down</span>
+            <span>both rendered at 16px</span>
+          </div>
+          <p className="compare__note">
+            Left column is the dedicated 16-unit master, right is the 24-unit master forced to the
+            same box with <code>optical="lg"</code>. The badge ring is what breaks first.
+          </p>
+          <div className="compare__grid">
+            {registry.slice(0, 24).map((icon) => {
+              const Icon = icon.Component;
+              return (
+                <div className="compare__pair" key={icon.name}>
+                  <Icon size={16} optical="sm" />
+                  <Icon size={16} optical="lg" />
+                  <span>{icon.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {grouped.length === 0 && (
         <p className="empty">

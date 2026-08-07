@@ -6,7 +6,7 @@ Generic icon sets give you one `file-text` for a payslip, an invoice, a receipt 
 withholding certificate. This set forces them apart, and expresses state through a fixed
 badge vocabulary instead of drawing a new mark for every combination.
 
-- **24 × 24 grid**, 20 × 20 live area, 1.5u stroke, round caps and joins
+- **Two optical sizes** — a 24-unit master and a separately drawn 16-unit master, picked automatically
 - **`currentColor` only** — no baked fills, no hard-coded palette
 - **No currency symbols** — `coin` ships blank so one set serves every market
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
@@ -73,6 +73,35 @@ rejects the combination.
     which already contains that glyph — it reads as a rendering error
 ```
 
+## Optical sizes
+
+Small icons are not scaled-down large ones. Every mark has two masters:
+
+| | Canvas | Stroke | Badge |
+| --- | --- | --- | --- |
+| `lg` | 24 units, live 20 | 1.5u | ring at (17.5, 17.5) r 4.25, knockout r 5.5 |
+| `sm` | 16 units, live 14 | 1.25u | **no ring**, glyph at (11.6, 11.6), knockout r 3.9 |
+
+Below about 20px a 4.25u ring is under 6px across and fills in solid, which turns
+every composed mark into a blob. The small master drops the ring entirely — the
+knockout already provides the separation the ring was doing — and spends the room
+on a bigger glyph. It also carries fewer detail lines, because strokes closer than
+about 2.5 units fuse at that size.
+
+Selection is automatic:
+
+```tsx
+<Payslip size={24} />   {/* 24-unit master */}
+<Payslip size={16} />   {/* 16-unit master */}
+<Payslip size={16} optical="lg" />  {/* force the large master */}
+```
+
+The cutover is at 18px (`OPTICAL_BREAKPOINT`). An icon with no small master falls
+back to the large one scaled down rather than failing, and `npm run icons` reports
+how many have one. Stroke width follows the master unless you set it explicitly.
+
+The demo site has a **16px compare** toggle that puts both side by side.
+
 ## Animation
 
 Optional, opt-in, one import:
@@ -103,14 +132,18 @@ The package is React-first but the geometry is not.
 
 ```ts
 // raw path data
-import { coinPaths, downModifierPaths } from "@octomate/payroll-icons/paths";
+import { coinPaths, coinPaths16, downModifierPaths } from "@octomate/payroll-icons/paths";
 
 // render to a string — Angular, email, SSG
 import { toSvgString } from "@octomate/payroll-icons";
-toSvgString(coinPaths, downModifierPaths, { size: 20 });
+toSvgString(
+  { lg: { base: coinPaths, modifier: downModifierPaths } },
+  { size: 20 },
+);
 ```
 
-Optimised `.svg` files ship too, at `@octomate/payroll-icons/svg/deduction.svg`.
+Optimised `.svg` files ship for both optical sizes, at
+`@octomate/payroll-icons/svg/deduction.svg` and `…/svg/deduction-16.svg`.
 
 Adding a Vue, Svelte or Angular target is one emitter in
 [`scripts/build.mjs`](scripts/build.mjs) — the validation, optimisation and composition
@@ -120,8 +153,10 @@ stages are already framework-neutral.
 
 ```
 icons/
-  bases/*.svg        21 authored masters — the source of truth
-  modifiers/*.svg     9 authored masters
+  bases/*.svg        21 authored 24-unit masters — the source of truth
+  bases-16/*.svg     21 authored 16-unit masters
+  modifiers/*.svg     9 authored 24-unit masters
+  modifiers-16/*.svg  9 authored 16-unit masters
   manifest.json      what each mark means, how it may be used, which tier
 scripts/build.mjs    validate → optimise → compose → emit
 src/
@@ -139,10 +174,16 @@ is written by hand.
 1. Draw it on the 24 × 24 grid, stroke 1.5, paths only, and save to `icons/bases/`.
 2. Add `pathLength="1"` to every path.
 3. Declare it in `icons/manifest.json` with its group, tier, and whether it is composable.
-4. `npm run icons` — the build validates the file and generates everything else.
+4. Draw the 16-unit master into `icons/bases-16/` with the same filename. Optional —
+   without it the icon still works, it just scales the large master down at small sizes.
+5. `npm run icons` — the build validates the files and generates everything else.
 
-The build rejects masters with the wrong viewBox, with `<rect>`/`<circle>`/`<g>` instead of
-paths, with a missing `pathLength`, or present on disk but undeclared in the manifest.
+The build rejects masters with the wrong viewBox for their grid, with `<rect>`/`<circle>`/`<g>`
+instead of paths, with a missing `pathLength`, or present on disk but undeclared in the
+manifest. It also rejects a master whose path count changes under optimisation — usually a
+sign of a degenerate path, such as a dot drawn as a zero-length capped segment. Draw dots as
+real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` survives on the
+24 grid and vanishes on the 16 grid.
 
 ## Scripts
 
@@ -164,7 +205,6 @@ the free bases and modifiers can compose the rest themselves — the composition
 published right here. Treat the tier field as packaging, not as a licence boundary. Real
 paid-tier value has to be additional artwork:
 
-- 16px and 20px masters drawn separately, not scaled down (the modifier ring collapses below 20px)
 - per-currency `coin` variants
 - filled variants for selected and tab-bar states
 - the Figma library

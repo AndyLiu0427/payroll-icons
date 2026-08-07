@@ -301,3 +301,51 @@ button[aria-pressed="true"] {
   flex-wrap: wrap;
   gap: 6px 24px;
 }
+
+/* ---------- optical size comparison ---------- */
+
+.compare {
+  margin-top: 34px;
+}
+
+.compare__note {
+  margin: 12px 0 18px;
+  max-width: 68ch;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.compare__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+}
+
+.compare__pair {
+  display: grid;
+  grid-template-columns: 24px 24px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--field);
+}
+
+/* The scaled-down 24 master is the control — mark it so the pair is unambiguous. */
+.compare__pair > svg:nth-child(2) {
+  opacity: 0.85;
+  outline: 1px dashed color-mix(in srgb, var(--redline) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.compare__pair > span {
+  font-size: 10.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
