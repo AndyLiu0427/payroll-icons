@@ -3,13 +3,58 @@ name: Publish
 on:
   release:
     types: [published]
+  # Preflight only — see the `preflight` job. Publishes nothing.
+  workflow_dispatch:
 
 permissions:
   contents: read
   id-token: write # npm provenance
 
 jobs:
+  # Answers "will the release actually work?" without cutting one: checks the
+  # token is valid, that it can reach the scope we publish under, and that the
+  # tarball contains what it should. Run this before every first release to a
+  # new name, and after rotating NPM_TOKEN.
+  preflight:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+
+      - name: Who does NPM_TOKEN belong to?
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Can the token reach the scope we publish under?
+        run: |
+          SCOPE=$(node -p "require('./package.json').name.split('/')[0]")
+          NAME=$(node -p "require('./package.json').name")
+          echo "package: $NAME"
+          if [ "${SCOPE#@}" = "$SCOPE" ]; then
+            echo "Unscoped package. A granular token cannot create an unscoped"
+            echo "package that does not exist yet — publish the first version"
+            echo "from a workstation, then let CI take over."
+            exit 0
+          fi
+          echo "scope:   $SCOPE"
+          npm access list packages "$SCOPE" \
+            || echo "No access to $SCOPE — the org may not exist, or the token was not granted it."
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: What would ship?
+        run: npm pack --dry-run
+
   npm:
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
