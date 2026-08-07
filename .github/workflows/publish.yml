@@ -60,8 +60,16 @@ jobs:
           echo "--- npm org ls ${SCOPE#@} ---"
           npm org ls "${SCOPE#@}" || true
           echo
-          echo "An error above does not mean the release will fail: an empty"
-          echo "scope and a token without organisation read both look like this."
+          echo "Both calls above hit /-/org/<scope>/… — organisation endpoints,"
+          echo "which a publish-only token is not meant to reach. Read them as:"
+          echo
+          echo "  403  the org exists; this token just cannot read org metadata."
+          echo "       Expected, and says nothing about publish permission."
+          echo "  404  the org does not exist under this name."
+          echo
+          echo "Publish permission comes from the token's packages-and-scopes"
+          echo "grant, which no read-only call can confirm. Check it on the"
+          echo "token's own page at npmjs.com/settings/~/tokens."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
