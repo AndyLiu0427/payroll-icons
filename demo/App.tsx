@@ -9,10 +9,11 @@ const GROUP_LABELS: Record<string, string> = {
   statutory: "法定 Statutory",
   organisation: "組織 Organisation",
   process: "流程 Process",
+  currency: "幣別 Currency",
 };
 
 const SIZES = [16, 20, 24, 32] as const;
-const STROKES = [1.25, 1.5, 2] as const;
+const STROKES = ["auto", 1.25, 1.5, 2] as const;
 
 function importLine(icon: IconMeta) {
   const pascal = icon.name.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
@@ -22,7 +23,7 @@ function importLine(icon: IconMeta) {
 export default function App() {
   const [query, setQuery] = useState("");
   const [size, setSize] = useState<number>(24);
-  const [stroke, setStroke] = useState<number>(1.5);
+  const [stroke, setStroke] = useState<number | "auto">("auto");
   const [animate, setAnimate] = useState(false);
   const [tier, setTier] = useState<"all" | "free" | "pro">("all");
   const [copied, setCopied] = useState<string | null>(null);
@@ -37,8 +38,9 @@ export default function App() {
       return (
         i.name.includes(q) ||
         i.zh.includes(query.trim()) ||
-        i.base.includes(q) ||
-        (i.modifier?.includes(q) ?? false)
+        (i.base?.includes(q) ?? false) ||
+        (i.modifier?.includes(q) ?? false) ||
+        (i.covers?.some((c) => c.toLowerCase().includes(q)) ?? false)
       );
     });
   }, [query, tier]);
@@ -72,8 +74,9 @@ export default function App() {
           <h1>Payroll Icon System</h1>
           <p>
             Payroll, time, statutory and billing marks built from{" "}
-            {new Set(registry.map((i) => i.base)).size} bases combined with a fixed modifier
-            vocabulary. 24 × 24 grid, stroke only, <code>currentColor</code>, animation-ready.
+            {new Set(registry.map((i) => i.base).filter(Boolean)).size} bases combined with a fixed
+            modifier vocabulary. 24 × 24 grid, stroke only, <code>currentColor</code>,
+            animation-ready.
           </p>
         </div>
         <dl className="fields">
@@ -208,7 +211,7 @@ export default function App() {
                     <Icon
                       key={replayKey}
                       size={size}
-                      strokeWidth={stroke}
+                      strokeWidth={stroke === "auto" ? undefined : stroke}
                       className={animate ? "pi-draw" : undefined}
                     />
                   </span>
@@ -218,6 +221,9 @@ export default function App() {
                     <span className="cell__formula">
                       {icon.base} + {icon.modifier}
                     </span>
+                  )}
+                  {icon.covers && (
+                    <span className="cell__covers">{icon.covers.slice(0, 4).join(" · ")}</span>
                   )}
                   {icon.tier === "pro" && <span className="cell__tier">pro</span>}
                   {copied === icon.name && <span className="cell__copied">Copied import</span>}

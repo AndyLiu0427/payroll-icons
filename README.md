@@ -8,7 +8,7 @@ badge vocabulary instead of drawing a new mark for every combination.
 
 - **Two optical sizes** — a 24-unit master and a separately drawn 16-unit master, picked automatically
 - **`currentColor` only** — no baked fills, no hard-coded palette
-- **No currency symbols** — `coin` ships blank so one set serves every market
+- **Currency-neutral by default** — `coin` ships blank; nine currency coins cover the rest
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
 - **Tree-shakeable** — importing one icon costs ~1.4 kB; the set never ships whole
 
@@ -102,6 +102,41 @@ how many have one. Stroke width follows the master unless you set it explicitly.
 
 The demo site has a **16px compare** toggle that puts both side by side.
 
+## Currency coins
+
+The generic `coin` deliberately carries no currency symbol, so one set serves every
+market. When a specific currency does need showing, there are nine currency coins —
+named **by symbol, not by ISO code**, because a dollar sign cannot distinguish USD
+from SGD from AUD and an icon that claims to would be lying:
+
+| Icon | Symbol | Stands for |
+| --- | --- | --- |
+| `CoinDollar` | $ | USD, SGD, AUD, HKD, TWD, NZD, CAD |
+| `CoinEuro` | € | EUR |
+| `CoinPound` | £ | GBP |
+| `CoinYen` | ¥ | JPY, CNY |
+| `CoinPeso` | ₱ | PHP |
+| `CoinDong` | ₫ | VND |
+| `CoinBaht` | ฿ | THB |
+| `CoinRinggit` | RM | MYR |
+| `CoinRupiah` | Rp | IDR |
+
+`covers` on each registry entry records the codes, so a currency picker can map a
+code to its mark and let the product label carry the code itself:
+
+```ts
+import { currencies } from "@octomate/payroll-icons/registry";
+
+const markFor = (code: string) =>
+  currencies.find((c) => c.covers?.includes(code))?.Component;
+```
+
+Currency coins are display-only. The glyph fills the coin, so there is no room for
+a badge — and a deduction is `coin + down`, not `coin-ringgit + down`. Two letters
+inside a 16-unit coin give about 3px per letter, so `CoinRinggit` and `CoinRupiah`
+have no small master and fall back to the 24-unit one; `hasSmallMaster` on the
+registry entry tells you which.
+
 ## Animation
 
 Optional, opt-in, one import:
@@ -157,6 +192,8 @@ icons/
   bases-16/*.svg     21 authored 16-unit masters
   modifiers/*.svg     9 authored 24-unit masters
   modifiers-16/*.svg  9 authored 16-unit masters
+  currency/*.svg      9 currency coins — complete icons, ring plus glyph
+  currency-16/*.svg   7 of those at 16 units; two-letter marks are 24 only
   manifest.json      what each mark means, how it may be used, which tier
 scripts/build.mjs    validate → optimise → compose → emit
 src/
@@ -205,7 +242,6 @@ the free bases and modifiers can compose the rest themselves — the composition
 published right here. Treat the tier field as packaging, not as a licence boundary. Real
 paid-tier value has to be additional artwork:
 
-- per-currency `coin` variants
 - filled variants for selected and tab-bar states
 - the Figma library
 

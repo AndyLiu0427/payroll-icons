@@ -349,3 +349,9 @@ button[aria-pressed="true"] {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.cell__covers {
+  font-size: 9.5px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}

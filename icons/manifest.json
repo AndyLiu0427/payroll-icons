@@ -109,6 +109,37 @@
     "minus": { "zh": "移除 / 減項", "tier": "free" }
   },
 
+  "$comment_currency": "Currency coins are named by symbol, not by ISO code: a dollar sign cannot distinguish USD from SGD from AUD, and an icon that claims to would be lying. `covers` records which currencies each mark legitimately stands for — use it to drive a picker, and let the product label carry the actual code. All of these are display-only: the glyph fills the coin, so there is no room for a badge, and you would badge the generic `coin` anyway.",
+
+  "currencies": {
+    "dollar": {
+      "zh": "美元 / 新幣 / 澳幣",
+      "symbol": "$",
+      "covers": ["USD", "SGD", "AUD", "HKD", "TWD", "NZD", "CAD"],
+      "tier": "pro"
+    },
+    "euro": { "zh": "歐元", "symbol": "€", "covers": ["EUR"], "tier": "pro" },
+    "pound": { "zh": "英鎊", "symbol": "£", "covers": ["GBP"], "tier": "pro" },
+    "yen": { "zh": "日圓 / 人民幣", "symbol": "¥", "covers": ["JPY", "CNY"], "tier": "pro" },
+    "peso": { "zh": "菲律賓披索", "symbol": "₱", "covers": ["PHP"], "tier": "pro" },
+    "dong": { "zh": "越南盾", "symbol": "₫", "covers": ["VND"], "tier": "pro" },
+    "baht": { "zh": "泰銖", "symbol": "฿", "covers": ["THB"], "tier": "pro" },
+    "ringgit": {
+      "zh": "馬幣",
+      "symbol": "RM",
+      "covers": ["MYR"],
+      "tier": "pro",
+      "note": "two letters — no 16px master, falls back to the 24px one"
+    },
+    "rupiah": {
+      "zh": "印尼盾",
+      "symbol": "Rp",
+      "covers": ["IDR"],
+      "tier": "pro",
+      "note": "two letters — no 16px master, falls back to the 24px one"
+    }
+  },
+
   "compositions": [
     {
       "name": "payslip-pending",
