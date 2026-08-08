@@ -30,5 +30,10 @@ jobs:
       - name: Build package
         run: npm run build
 
+      # Resolves the built package the way Node and webpack will, not the way a
+      # permissive bundler does. Two release blockers got past everything else.
+      - name: Smoke test the built package
+        run: npm run smoke
+
       - name: Build free tier
         run: npm run build:free

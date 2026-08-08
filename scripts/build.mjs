@@ -471,8 +471,8 @@ for (const icon of icons) {
 
   writeFileSync(
     join(GEN, "react", `${Comp}.ts`),
-    `${HEADER}import { createIcon } from "../../createIcon";
-import { ${names.join(", ")} } from "../paths";
+    `${HEADER}import { createIcon } from "../../createIcon.js";
+import { ${names.join(", ")} } from "../paths.js";
 
 /** ${icon.zh} — ${r.note}${
       r.smPaths ? " · 24px and 16px optical masters" : " · 24px master only"
@@ -512,8 +512,8 @@ export default ${Comp};
 /* registry — deliberately imports everything, for pickers and docs */
 writeFileSync(
   join(GEN, "registry.ts"),
-  `${HEADER}import type { IconComponent } from "../createIcon";
-${icons.map((i) => `import { ${pascal(i.name)} } from "./react/${pascal(i.name)}";`).join("\n")}
+  `${HEADER}import type { IconComponent } from "../createIcon.js";
+${icons.map((i) => `import { ${pascal(i.name)} } from "./react/${pascal(i.name)}.js";`).join("\n")}
 
 export interface IconMeta {
   name: string;
@@ -566,7 +566,7 @@ export const groups = ${JSON.stringify([...new Set(icons.map((i) => i.group))])}
 /* public barrel */
 writeFileSync(
   join(GEN, "index.ts"),
-  `${HEADER}${icons.map((i) => `export { ${pascal(i.name)} } from "./react/${pascal(i.name)}";`).join("\n")}
+  `${HEADER}${icons.map((i) => `export { ${pascal(i.name)} } from "./react/${pascal(i.name)}.js";`).join("\n")}
 `,
 );
 

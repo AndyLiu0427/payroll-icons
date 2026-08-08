@@ -1,0 +1,42 @@
+# Changelog
+
+All notable changes to this package are documented here.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+While the major version is 0, the shape of a mark may change in a minor
+release — the drawings are still settling. The component API will not.
+
+## [0.1.0] — unreleased
+
+First preview release.
+
+### Added
+
+- **54 icons** for payroll, time and attendance, statutory contributions,
+  billing and payments, built from 21 bases combined with 9 modifiers.
+- **Two optical sizes.** A 24-unit master and a separately drawn 16-unit
+  master, selected automatically at 18px and below. The small master drops the
+  modifier ring, which fills in solid below that size, and carries fewer detail
+  lines.
+- **Two weights.** `variant="filled"` for selected and tab-bar states, on every
+  mark at both sizes. 34 are derived from the outline by masking; 20 are drawn
+  solid masters for shapes the derivation cannot reach.
+- **Nine currency coins**, named by symbol rather than ISO code, each carrying
+  the `covers` list of codes it legitimately stands for.
+- **Draw-on animation**, opt-in via `animate.css`. Every path carries
+  `pathLength="1"`, so one rule times the whole library.
+- **Framework-neutral exports** — raw path data, `toSvgString()`, and optimised
+  `.svg` files alongside the React components.
+- **Figma import bundle** via `npm run figma`: 212 SVGs plus a manifest naming
+  each component and its size/style variant properties.
+
+### Notes
+
+- `coin` ships without a currency symbol so one set serves every market.
+- Icons are decorative by default; passing `aria-label` switches them to
+  `role="img"`.
+- Two system rules are enforced at build time rather than documented: a
+  display-only base cannot be badged, and a modifier cannot repeat a glyph its
+  base already contains.

@@ -1,12 +1,18 @@
 {
   "extends": "./tsconfig.json",
+  // nodenext makes the compiler enforce fully-specified relative imports, which is
+  // what Node ESM and strict-ESM bundlers require of a "type": "module" package.
+  // Without it, tsc happily emits `from "./generated"` and the package fails to
+  // resolve for every consumer that is not a permissive bundler.
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
   },
   "include": ["src"],
   "exclude": ["demo", "scripts", "**/*.test.ts", "**/*.test.tsx"]
