@@ -9,6 +9,7 @@ badge vocabulary instead of drawing a new mark for every combination.
 - **Two optical sizes** — a 24-unit master and a separately drawn 16-unit master, picked automatically
 - **`currentColor` only** — no baked fills, no hard-coded palette
 - **Currency-neutral by default** — `coin` ships blank; nine currency coins cover the rest
+- **Outline and filled** — the filled weight is derived from the same masters, not a second set
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
 - **Tree-shakeable** — importing one icon costs ~1.4 kB; the set never ships whole
 
@@ -137,6 +138,65 @@ inside a 16-unit coin give about 3px per letter, so `CoinRinggit` and `CoinRupia
 have no small master and fall back to the 24-unit one; `hasSmallMaster` on the
 registry entry tells you which.
 
+## Filled variant
+
+For selected and tab-bar states:
+
+```tsx
+<Payslip variant="filled" />
+```
+
+The filled form is derived, not drawn: the outer path becomes a solid body and
+the detail strokes are masked out of it, so it holds up on any background with
+one colour and adds no new artwork to maintain. On a composed mark the badge
+knockout joins the same mask, and the badge stays an outline against the solid
+body.
+
+Only marks whose outer path encloses every detail can be derived this way — 25
+of 54. The rest fall back to the outline, so a nav row never breaks, it just
+stops changing weight for that item. `hasFilled` on the registry entry says
+which in advance:
+
+```ts
+import { registry } from "@octomate/payroll-icons/registry";
+const needsDrawnFilledArtwork = registry.filter((i) => !i.hasFilled);
+```
+
+What is excluded and why:
+
+| Mark | Why it cannot be derived |
+| --- | --- |
+| `calendar`, `timesheet` | the date tabs sit above the box, so knocking them out deletes them |
+| `employee`, `team`, `org-chart` | shoulders and sibling nodes fall outside the first shape |
+| `bank`, `exchange`, `balance`, `pay-run`, `documents` | no closed outer path at all — they are open strokes |
+| `ledger` | the spine follows the container edge, so knocking it out bites the silhouette; skipping it leaves something indistinguishable from a filled invoice |
+
+Those need drawn filled masters, which is the next real piece of paid-tier
+artwork. Draw-on animation is an outline effect and is disabled on filled marks
+automatically.
+
+## Figma
+
+`npm run figma` emits an import-ready bundle:
+
+```
+figma-export/
+  24/outline/*.svg   54    16/outline/*.svg   52
+  24/filled/*.svg    25    16/filled/*.svg    25
+  components.json
+```
+
+One folder per size and style, so each imports into Figma as a clean set.
+`components.json` names every component (`Payroll/<group>/<name>`) and its
+variant properties — `size` and `style`, matching the React props, so a
+designer and an engineer are naming the same thing.
+
+To assemble: import each folder, select the frames, **Create Multiple
+Components**, then **Combine as Variants** per icon.
+
+Publishing this as a shared Figma library needs a paid Figma plan; the bundle
+and naming are plan-independent.
+
 ## Animation
 
 Optional, opt-in, one import:
@@ -228,6 +288,7 @@ real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` sur
 | --- | --- |
 | `npm run icons` | Validate masters and generate components, data and SVGs |
 | `npm run icons:free` | Same, free tier only |
+| `npm run figma` | Generate, then emit the Figma import bundle |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
 | `npm run typecheck` | `tsc --noEmit` across src, demo and scripts |
@@ -242,8 +303,8 @@ the free bases and modifiers can compose the rest themselves — the composition
 published right here. Treat the tier field as packaging, not as a licence boundary. Real
 paid-tier value has to be additional artwork:
 
-- filled variants for selected and tab-bar states
-- the Figma library
+- drawn filled masters for the 29 marks whose filled form cannot be derived
+- a published Figma library, which needs a paid Figma plan
 
 ## Licence
 

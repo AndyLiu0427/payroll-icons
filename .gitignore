@@ -4,3 +4,4 @@ src/generated/
 demo-dist/
 *.tsbuildinfo
 .DS_Store
+figma-export/

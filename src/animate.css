@@ -10,7 +10,18 @@
  * the components stay free of per-path style objects.
  */
 
-:where(.pi-draw) path {
+/*
+ * The filled variant has no outline to trace — its body is a fill, and running
+ * a dash offset over the stroke that thickens it just makes the edge crawl.
+ * Draw-on is an outline effect; filled marks opt out.
+ */
+:where(.pi-draw)[data-variant="filled"] path {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+:where(.pi-draw):not([data-variant="filled"]) path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: pi-draw var(--pi-duration, 620ms) var(--pi-ease, cubic-bezier(0.65, 0, 0.35, 1))
@@ -24,33 +35,33 @@
 }
 
 /* Draw the outer shape first, then work inward. */
-:where(.pi-draw) path:nth-child(1) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(1) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 0);
 }
-:where(.pi-draw) path:nth-child(2) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(2) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 1);
 }
-:where(.pi-draw) path:nth-child(3) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(3) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 2);
 }
-:where(.pi-draw) path:nth-child(4) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(4) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 3);
 }
-:where(.pi-draw) path:nth-child(5) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(5) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 4);
 }
-:where(.pi-draw) path:nth-child(6) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(6) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 5);
 }
-:where(.pi-draw) path:nth-child(7) {
+:where(.pi-draw):not([data-variant="filled"]) path:nth-child(7) {
   animation-delay: calc(var(--pi-stagger, 70ms) * 6);
 }
 
 /* On composed marks the badge is a sibling of the masked group, so it lands last. */
-:where(.pi-draw) g + path[data-modifier] {
+:where(.pi-draw):not([data-variant="filled"]) g + path[data-modifier] {
   animation-delay: calc(var(--pi-stagger, 70ms) * 5);
 }
-:where(.pi-draw) g + path[data-modifier] ~ path[data-modifier] {
+:where(.pi-draw):not([data-variant="filled"]) g + path[data-modifier] ~ path[data-modifier] {
   animation-delay: calc(var(--pi-stagger, 70ms) * 6);
 }
 
@@ -66,8 +77,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.pi-draw) path,
-  :where(.pi-draw) g + path[data-modifier] {
+  :where(.pi-draw):not([data-variant="filled"]) path,
+  :where(.pi-draw):not([data-variant="filled"]) g + path[data-modifier] {
     animation: none;
     stroke-dashoffset: 0;
   }

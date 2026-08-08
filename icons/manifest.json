@@ -11,21 +11,41 @@
   },
 
   "bases": {
-    "payslip": { "zh": "薪資單", "group": "documents", "composable": true, "tier": "free" },
-    "invoice": { "zh": "發票 / 請款單", "group": "documents", "composable": true, "tier": "free" },
-    "contract": { "zh": "合約", "group": "documents", "composable": true, "tier": "free" },
+    "payslip": {
+      "zh": "薪資單",
+      "group": "documents",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
+    "invoice": {
+      "zh": "發票 / 請款單",
+      "group": "documents",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
+    "contract": {
+      "zh": "合約",
+      "group": "documents",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
     "tax-form": {
       "zh": "稅務表單 / 扣繳",
       "group": "documents",
       "composable": true,
-      "tier": "free"
+      "tier": "free",
+      "fill": { "container": 0 }
     },
     "statement": {
       "zh": "對帳單",
       "group": "documents",
       "composable": false,
       "tier": "free",
-      "note": "full-width bar chart runs into the modifier zone"
+      "note": "full-width bar chart runs into the modifier zone",
+      "fill": { "container": 0 }
     },
     "documents": {
       "zh": "多筆文件 / 批次",
@@ -33,8 +53,20 @@
       "composable": true,
       "tier": "free"
     },
-    "receipt": { "zh": "收據", "group": "documents", "composable": true, "tier": "free" },
-    "ledger": { "zh": "總帳 / 帳冊", "group": "documents", "composable": true, "tier": "free" },
+    "receipt": {
+      "zh": "收據",
+      "group": "documents",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
+    "ledger": {
+      "zh": "總帳 / 帳冊",
+      "group": "documents",
+      "composable": true,
+      "tier": "free",
+      "note": "no derivable filled form — the spine follows the container edge, so knocking it out bites the silhouette, and skipping it leaves a shape indistinguishable from a filled invoice"
+    },
 
     "timesheet": {
       "zh": "出勤工時",
@@ -49,16 +81,24 @@
       "group": "time",
       "composable": true,
       "tier": "free",
-      "conflicts": ["pending"]
+      "conflicts": ["pending"],
+      "fill": { "container": 0 }
     },
 
-    "coin": { "zh": "金額 / 幣值", "group": "money", "composable": true, "tier": "free" },
+    "coin": {
+      "zh": "金額 / 幣值",
+      "group": "money",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
     "banknote": {
       "zh": "現金 / 鈔票",
       "group": "money",
       "composable": false,
       "tier": "free",
-      "note": "wide and short — knockout eats a run of the bottom edge, not a corner"
+      "note": "wide and short — knockout eats a run of the bottom edge, not a corner",
+      "fill": { "container": 0 }
     },
     "bank": { "zh": "銀行 / 帳戶", "group": "money", "composable": true, "tier": "free" },
     "exchange": {
@@ -76,7 +116,13 @@
       "note": "right pan and base sit in the modifier zone"
     },
 
-    "shield": { "zh": "法定給付 / 保險", "group": "statutory", "composable": true, "tier": "free" },
+    "shield": {
+      "zh": "法定給付 / 保險",
+      "group": "statutory",
+      "composable": true,
+      "tier": "free",
+      "fill": { "container": 0 }
+    },
 
     "employee": { "zh": "員工", "group": "organisation", "composable": true, "tier": "free" },
     "team": {

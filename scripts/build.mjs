@@ -302,6 +302,38 @@ const OPTICAL = {
  * Three shapes flow through here: a plain base, a base + modifier composition,
  * and a currency coin, which is a complete drawing with no modifier at all.
  */
+/**
+ * Turns a base's `fill` declaration into the index list the runtime needs, for
+ * one optical size. Returns null when the base has no filled form, or when the
+ * master has too few paths for the declared indices — which happens when a 16px
+ * master drops detail the 24px one carries.
+ */
+function fillConfig(baseName, paths) {
+  const spec = manifest.bases[baseName]?.fill;
+  if (!spec || !paths) return null;
+  const { container, skip = [] } = spec;
+
+  if (container >= paths.length) {
+    errors.push(
+      `${baseName}: fill.container is ${container} but the master has ${paths.length} path(s)`,
+    );
+    return null;
+  }
+  for (const i of skip) {
+    if (i >= paths.length) {
+      errors.push(`${baseName}: fill.skip lists path ${i}, which the master does not have`);
+      return null;
+    }
+  }
+
+  const knockout = paths.map((_, i) => i).filter((i) => i !== container && !skip.includes(i));
+  return { container, knockout };
+}
+
+function fillLiteral(cfg) {
+  return cfg ? `, fill: { container: ${cfg.container}, knockout: [${cfg.knockout}] }` : "";
+}
+
 function resolve(icon) {
   if (icon.currency) {
     const sym = `${camel(icon.currency)}CoinPaths`;
@@ -313,6 +345,7 @@ function resolve(icon) {
       lgPaths: { base: currencyPaths[icon.currency] },
       smPaths: currencyPaths16[icon.currency] ? { base: currencyPaths16[icon.currency] } : null,
       note: `${icon.symbol} — covers ${icon.covers.join(", ")}`,
+      hasFilled: false,
     };
   }
 
@@ -321,39 +354,46 @@ function resolve(icon) {
   const hasSmallMod = !icon.modifier || modifierPaths16[icon.modifier] != null;
   const small = hasSmallBase && hasSmallMod;
 
+  const fillLg = fillConfig(icon.base, basePaths[icon.base]);
+  const fillSm = fillConfig(icon.base, basePaths16[icon.base]);
+
   if (!icon.modifier) {
     return {
       lgNames: [`${b}Paths`],
-      lg: `{ base: ${b}Paths }`,
+      lg: `{ base: ${b}Paths${fillLiteral(fillLg)} }`,
       smNames: small ? [`${b}Paths16`] : null,
-      sm: small ? `{ base: ${b}Paths16 }` : null,
+      sm: small ? `{ base: ${b}Paths16${fillLiteral(fillSm)} }` : null,
       lgPaths: { base: basePaths[icon.base] },
       smPaths: small ? { base: basePaths16[icon.base] } : null,
       note: icon.base,
+      hasFilled: fillLg != null,
     };
   }
 
   const m = camel(icon.modifier);
   return {
     lgNames: [`${b}Paths`, `${m}ModifierPaths`],
-    lg: `{ base: ${b}Paths, modifier: ${m}ModifierPaths }`,
+    lg: `{ base: ${b}Paths, modifier: ${m}ModifierPaths${fillLiteral(fillLg)} }`,
     smNames: small ? [`${b}Paths16`, `${m}ModifierPaths16`] : null,
-    sm: small ? `{ base: ${b}Paths16, modifier: ${m}ModifierPaths16 }` : null,
+    sm: small ? `{ base: ${b}Paths16, modifier: ${m}ModifierPaths16${fillLiteral(fillSm)} }` : null,
     lgPaths: { base: basePaths[icon.base], modifier: modifierPaths[icon.modifier] },
     smPaths: small
       ? { base: basePaths16[icon.base], modifier: modifierPaths16[icon.modifier] }
       : null,
     note: `${icon.base} + ${icon.modifier}`,
+    hasFilled: fillLg != null,
   };
 }
 
 let smallCount = 0;
+let filledCount = 0;
 
 /* one component per icon */
 for (const icon of icons) {
   const Comp = pascal(icon.name);
   const r = resolve(icon);
   if (r.smPaths) smallCount++;
+  if (r.hasFilled) filledCount++;
 
   const names = [...r.lgNames, ...(r.smNames ?? [])];
   const sm = r.sm ? `,\n  sm: ${r.sm}` : "";
@@ -417,6 +457,8 @@ export interface IconMeta {
   covers?: readonly string[];
   /** False when the icon has no dedicated 16px master and scales the 24px one down. */
   hasSmallMaster: boolean;
+  /** False when variant="filled" falls back to the outline for this mark. */
+  hasFilled: boolean;
   Component: IconComponent;
 }
 
@@ -436,6 +478,7 @@ ${icons
       (i.symbol ? `symbol: ${JSON.stringify(i.symbol)}, ` : "") +
       (i.covers ? `covers: ${JSON.stringify(i.covers)}, ` : "") +
       `hasSmallMaster: ${r.smPaths != null}, ` +
+      `hasFilled: ${r.hasFilled === true}, ` +
       `Component: ${pascal(i.name)} },`
     );
   })
@@ -469,5 +512,7 @@ console.log(
     `(${icons.length - composed} drawn, ${composed} composed) ` +
     `from ${Object.keys(basePaths).length} bases + ${Object.keys(modifierPaths).length} modifiers` +
     `\n  ${optical} have a dedicated 16px optical master` +
-    (smallCount < icons.length ? " — the rest fall back to the 24px master scaled down" : ""),
+    (smallCount < icons.length ? " — the rest fall back to the 24px master scaled down" : "") +
+    `\n  ${filledCount}/${icons.length} have a filled variant` +
+    (filledCount < icons.length ? ' — the rest fall back to the outline on variant="filled"' : ""),
 );

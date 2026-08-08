@@ -355,3 +355,14 @@ button[aria-pressed="true"] {
   color: var(--muted);
   letter-spacing: 0.04em;
 }
+
+.cell__nofill {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px dashed var(--hairline);
+  padding: 0 4px;
+}

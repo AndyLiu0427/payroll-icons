@@ -17,6 +17,13 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "ref"> {
    * must stay visually consistent regardless of its own box.
    */
   optical?: "auto" | "lg" | "sm";
+  /**
+   * `"filled"` gives the solid weight used for selected and tab-bar states.
+   * Falls back to the outline on marks that have no filled form — a nav row
+   * never breaks, it just stops changing weight for that one item. Check
+   * `hasFilled` on the registry entry if you need to know in advance.
+   */
+  variant?: "outline" | "filled";
 }
 
 export type IconComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
@@ -41,6 +48,16 @@ export const OPTICAL_BREAKPOINT = 18;
 export interface IconGeometry {
   base: readonly string[];
   modifier?: readonly string[];
+  /**
+   * Enables `variant="filled"`. `container` indexes the closed outer path that
+   * becomes the solid body; `knockout` indexes the detail paths cut out of it,
+   * so the mark stays legible on any background without a second colour.
+   *
+   * Only marks whose outer path encloses every detail can be derived this way.
+   * A calendar's tabs sit above its box and a person's shoulders outside their
+   * head, so those need drawn filled artwork instead and have no `fill` here.
+   */
+  fill?: { container: number; knockout: readonly number[] };
 }
 
 export interface IconMasters {
@@ -71,6 +88,7 @@ export function createIcon(name: string, masters: IconMasters): IconComponent {
       strokeWidth,
       absoluteStrokeWidth = false,
       optical = "auto",
+      variant = "outline",
       children,
       ...rest
     } = props;
@@ -81,9 +99,9 @@ export function createIcon(name: string, masters: IconMasters): IconComponent {
 
     const wantsSmall =
       optical === "sm" || (optical === "auto" && Number(size) <= OPTICAL_BREAKPOINT);
-    const variant = wantsSmall && masters.sm ? "sm" : "lg";
-    const grid = GRID[variant];
-    const geometry = variant === "sm" && masters.sm ? masters.sm : masters.lg;
+    const opticalVariant = wantsSmall && masters.sm ? "sm" : "lg";
+    const grid = GRID[opticalVariant];
+    const geometry = opticalVariant === "sm" && masters.sm ? masters.sm : masters.lg;
 
     // Each master has its own resting weight, so an unset strokeWidth follows
     // the master rather than a single library-wide default.
@@ -98,6 +116,83 @@ export function createIcon(name: string, masters: IconMasters): IconComponent {
     const basePaths = geometry.base.map((d, i) =>
       createElement("path", { key: `b${i}`, d, pathLength: 1 }),
     );
+
+    const filled = variant === "filled" && geometry.fill != null;
+
+    /*
+     * One mask carries every subtraction: the detail strokes cut out of the
+     * solid body, plus the badge disc when the mark is composed. Two masks
+     * cannot stack on one element, so they are merged here.
+     */
+    if (filled && geometry.fill) {
+      const { container, knockout } = geometry.fill;
+      const body = geometry.base[container];
+      return createElement(
+        "svg",
+        {
+          ref,
+          ...SVG_DEFAULTS,
+          viewBox: `0 0 ${grid.canvas} ${grid.canvas}`,
+          width: size,
+          height: size,
+          strokeWidth: resolvedStroke,
+          "data-variant": "filled",
+          "aria-hidden": named ? undefined : true,
+          role: named ? "img" : undefined,
+          ...rest,
+        },
+        createElement(
+          "mask",
+          {
+            key: "mask",
+            id: maskId,
+            maskUnits: "userSpaceOnUse",
+            x: 0,
+            y: 0,
+            width: grid.canvas,
+            height: grid.canvas,
+          },
+          createElement("path", {
+            key: "body",
+            d: body,
+            fill: "#fff",
+            stroke: "#fff",
+            strokeWidth: resolvedStroke,
+          }),
+          ...knockout.map((i) =>
+            createElement("path", {
+              key: `k${i}`,
+              d: geometry.base[i],
+              fill: "none",
+              stroke: "#000",
+              strokeWidth: resolvedStroke,
+            }),
+          ),
+          geometry.modifier
+            ? createElement("circle", {
+                key: "badge",
+                cx: grid.knockoutCentre,
+                cy: grid.knockoutCentre,
+                r: grid.knockoutRadius,
+                fill: "#000",
+                stroke: "none",
+              })
+            : null,
+        ),
+        createElement("path", {
+          key: "solid",
+          d: body,
+          fill: "currentColor",
+          stroke: "currentColor",
+          strokeWidth: resolvedStroke,
+          mask: `url(#${maskId})`,
+        }),
+        ...(geometry.modifier ?? []).map((d, i) =>
+          createElement("path", { key: `m${i}`, d, pathLength: 1, "data-modifier": "" }),
+        ),
+        children,
+      );
+    }
 
     const contents = geometry.modifier
       ? [
@@ -173,9 +268,9 @@ export function toSvgString(
   const { size = 24, strokeWidth, id = "pi", optical = "auto" } = options;
 
   const wantsSmall = optical === "sm" || (optical === "auto" && size <= OPTICAL_BREAKPOINT);
-  const variant = wantsSmall && masters.sm ? "sm" : "lg";
-  const grid = GRID[variant];
-  const geometry = variant === "sm" && masters.sm ? masters.sm : masters.lg;
+  const opticalVariant = wantsSmall && masters.sm ? "sm" : "lg";
+  const grid = GRID[opticalVariant];
+  const geometry = opticalVariant === "sm" && masters.sm ? masters.sm : masters.lg;
   const sw = strokeWidth ?? grid.strokeWidth;
 
   const attrs =

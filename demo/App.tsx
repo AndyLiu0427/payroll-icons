@@ -29,6 +29,7 @@ export default function App() {
   const [copied, setCopied] = useState<string | null>(null);
   const [replayKey, setReplayKey] = useState(0);
   const [compare, setCompare] = useState(false);
+  const [filled, setFilled] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -152,6 +153,9 @@ export default function App() {
               Replay ↻
             </button>
           )}
+          <button type="button" aria-pressed={filled} onClick={() => setFilled((f) => !f)}>
+            Filled
+          </button>
           <button type="button" aria-pressed={compare} onClick={() => setCompare((c) => !c)}>
             16px compare
           </button>
@@ -212,6 +216,7 @@ export default function App() {
                       key={replayKey}
                       size={size}
                       strokeWidth={stroke === "auto" ? undefined : stroke}
+                      variant={filled ? "filled" : "outline"}
                       className={animate ? "pi-draw" : undefined}
                     />
                   </span>
@@ -225,6 +230,7 @@ export default function App() {
                   {icon.covers && (
                     <span className="cell__covers">{icon.covers.slice(0, 4).join(" · ")}</span>
                   )}
+                  {filled && !icon.hasFilled && <span className="cell__nofill">outline only</span>}
                   {icon.tier === "pro" && <span className="cell__tier">pro</span>}
                   {copied === icon.name && <span className="cell__copied">Copied import</span>}
                 </button>
