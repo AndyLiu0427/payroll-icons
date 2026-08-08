@@ -9,7 +9,7 @@ badge vocabulary instead of drawing a new mark for every combination.
 - **Two optical sizes** — a 24-unit master and a separately drawn 16-unit master, picked automatically
 - **`currentColor` only** — no baked fills, no hard-coded palette
 - **Currency-neutral by default** — `coin` ships blank; nine currency coins cover the rest
-- **Outline and filled** — the filled weight is derived from the same masters, not a second set
+- **Outline and filled** — every mark has both weights, at both optical sizes
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
 - **Tree-shakeable** — importing one icon costs ~1.4 kB; the set never ships whole
 
@@ -140,39 +140,43 @@ registry entry tells you which.
 
 ## Filled variant
 
-For selected and tab-bar states:
+For selected and tab-bar states. Every mark has one, at both optical sizes:
 
 ```tsx
 <Payslip variant="filled" />
 ```
 
-The filled form is derived, not drawn: the outer path becomes a solid body and
-the detail strokes are masked out of it, so it holds up on any background with
-one colour and adds no new artwork to maintain. On a composed mark the badge
-knockout joins the same mask, and the badge stays an outline against the solid
-body.
+Two mechanisms produce it, and which one a mark uses is a property of its shape,
+not a policy:
 
-Only marks whose outer path encloses every detail can be derived this way — 25
-of 54. The rest fall back to the outline, so a nav row never breaks, it just
-stops changing weight for that item. `hasFilled` on the registry entry says
-which in advance:
+**Derived** (34 marks). The outer path becomes a solid body and the detail
+strokes are masked out of it. No new artwork, and the filled form can never
+drift from the outline because it *is* the outline. Declared as
+`fill: { container, skip }` in the manifest. Currency coins derive for free —
+a ring with its glyph inside is exactly the shape the derivation wants.
 
-```ts
-import { registry } from "@octomate/payroll-icons/registry";
-const needsDrawnFilledArtwork = registry.filter((i) => !i.hasFilled);
+**Drawn** (20 marks). Everything the derivation cannot reach: a calendar's tabs
+sit above its box, a person's shoulders outside their head, and `bank`,
+`exchange`, `balance`, `pay-run` have no closed outer path at all. These live in
+`icons/bases-filled/` as solid silhouettes with counters as even-odd subpaths.
+
+A base may not have both — the build rejects it, because two sources for one
+form drift apart:
+
+```
+✗ 1 problem(s) in the icon set:
+
+  • calendar has both a drawn filled master and a derived fill in the manifest
+    — pick one, or the two will drift apart
 ```
 
-What is excluded and why:
+`ledger` is the one mark that was derived, judged, and moved to drawn: its spine
+follows the container edge, so knocking it out bit the silhouette, and skipping
+it left something indistinguishable from a filled invoice. In a set whose whole
+purpose is telling documents apart, that collision mattered more than the saved
+artwork.
 
-| Mark | Why it cannot be derived |
-| --- | --- |
-| `calendar`, `timesheet` | the date tabs sit above the box, so knocking them out deletes them |
-| `employee`, `team`, `org-chart` | shoulders and sibling nodes fall outside the first shape |
-| `bank`, `exchange`, `balance`, `pay-run`, `documents` | no closed outer path at all — they are open strokes |
-| `ledger` | the spine follows the container edge, so knocking it out bites the silhouette; skipping it leaves something indistinguishable from a filled invoice |
-
-Those need drawn filled masters, which is the next real piece of paid-tier
-artwork. Draw-on animation is an outline effect and is disabled on filled marks
+Draw-on animation is an outline effect and is disabled on filled marks
 automatically.
 
 ## Figma
@@ -182,7 +186,7 @@ automatically.
 ```
 figma-export/
   24/outline/*.svg   54    16/outline/*.svg   52
-  24/filled/*.svg    25    16/filled/*.svg    25
+  24/filled/*.svg    54    16/filled/*.svg    52
   components.json
 ```
 
@@ -252,6 +256,8 @@ icons/
   bases-16/*.svg     21 authored 16-unit masters
   modifiers/*.svg     9 authored 24-unit masters
   modifiers-16/*.svg  9 authored 16-unit masters
+  bases-filled/*.svg      11 drawn solid masters, for shapes the fill cannot derive
+  bases-filled-16/*.svg   11 of those at 16 units
   currency/*.svg      9 currency coins — complete icons, ring plus glyph
   currency-16/*.svg   7 of those at 16 units; two-letter marks are 24 only
   manifest.json      what each mark means, how it may be used, which tier
@@ -303,8 +309,9 @@ the free bases and modifiers can compose the rest themselves — the composition
 published right here. Treat the tier field as packaging, not as a licence boundary. Real
 paid-tier value has to be additional artwork:
 
-- drawn filled masters for the 29 marks whose filled form cannot be derived
 - a published Figma library, which needs a paid Figma plan
+- a duotone or two-tone weight, if the product ever needs a third emphasis level
+- additional currency glyphs beyond the nine drawn (₹, ₩, ₪, ₦ …)
 
 ## Licence
 

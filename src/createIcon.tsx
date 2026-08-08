@@ -58,6 +58,12 @@ export interface IconGeometry {
    * head, so those need drawn filled artwork instead and have no `fill` here.
    */
   fill?: { container: number; knockout: readonly number[] };
+  /**
+   * A drawn filled master — solid areas with counters as even-odd subpaths.
+   * Supersedes `fill` for marks the derivation cannot reach: anything whose
+   * outer path does not enclose its details, or has no outer path at all.
+   */
+  solid?: readonly string[];
 }
 
 export interface IconMasters {
@@ -117,7 +123,73 @@ export function createIcon(name: string, masters: IconMasters): IconComponent {
       createElement("path", { key: `b${i}`, d, pathLength: 1 }),
     );
 
-    const filled = variant === "filled" && geometry.fill != null;
+    const filled = variant === "filled" && (geometry.solid != null || geometry.fill != null);
+
+    /* A drawn filled master is already the finished silhouette — just paint it. */
+    if (filled && geometry.solid) {
+      const badge = geometry.modifier;
+      return createElement(
+        "svg",
+        {
+          ref,
+          ...SVG_DEFAULTS,
+          viewBox: `0 0 ${grid.canvas} ${grid.canvas}`,
+          width: size,
+          height: size,
+          strokeWidth: resolvedStroke,
+          "data-variant": "filled",
+          "aria-hidden": named ? undefined : true,
+          role: named ? "img" : undefined,
+          ...rest,
+        },
+        badge
+          ? createElement(
+              "mask",
+              {
+                key: "mask",
+                id: maskId,
+                maskUnits: "userSpaceOnUse",
+                x: 0,
+                y: 0,
+                width: grid.canvas,
+                height: grid.canvas,
+              },
+              createElement("rect", {
+                x: 0,
+                y: 0,
+                width: grid.canvas,
+                height: grid.canvas,
+                fill: "#fff",
+                stroke: "none",
+              }),
+              createElement("circle", {
+                cx: grid.knockoutCentre,
+                cy: grid.knockoutCentre,
+                r: grid.knockoutRadius,
+                fill: "#000",
+                stroke: "none",
+              }),
+            )
+          : null,
+        createElement(
+          "g",
+          { key: "solid", ...(badge ? { mask: `url(#${maskId})` } : {}) },
+          geometry.solid.map((d, i) =>
+            createElement("path", {
+              key: `s${i}`,
+              d,
+              fill: "currentColor",
+              fillRule: "evenodd",
+              stroke: "none",
+            }),
+          ),
+        ),
+        ...(badge ?? []).map((d, i) =>
+          createElement("path", { key: `m${i}`, d, pathLength: 1, "data-modifier": "" }),
+        ),
+        children,
+      );
+    }
 
     /*
      * One mask carries every subtraction: the detail strokes cut out of the

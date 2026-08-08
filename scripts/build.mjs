@@ -43,7 +43,7 @@ const warnings = [];
  * `optional` is for the 16px optical masters: an icon without one falls back to
  * the 24 master scaled down, which is worse but not broken.
  */
-function readMaster(dir, name, { canvas = 24, optional = false } = {}) {
+function readMaster(dir, name, { canvas = 24, optional = false, solid = false } = {}) {
   const file = join(ICONS, dir, `${name}.svg`);
   let raw;
   try {
@@ -70,13 +70,30 @@ function readMaster(dir, name, { canvas = 24, optional = false } = {}) {
   const paths = [...raw.matchAll(/<path\b([^>]*)\/>/g)].map((m) => m[1]);
   const data = [];
   for (const attrs of paths) {
-    if (!/pathLength="1"/.test(attrs)) {
+    // Solid masters are areas, not traced outlines — there is nothing for the
+    // draw-on animation to run along, so they carry no pathLength.
+    if (!solid && !/pathLength="1"/.test(attrs)) {
       errors.push(`${dir}/${name}.svg has a path without pathLength="1"`);
     }
     const d = attrs.match(/\bd="([^"]+)"/)?.[1];
     if (d) data.push(d);
   }
   if (!data.length) errors.push(`${dir}/${name}.svg has no path data`);
+
+  if (solid) {
+    if (!/fill="currentColor"/.test(raw)) {
+      errors.push(`${dir}/${name}.svg must set fill="currentColor" — it is a solid master`);
+    }
+    if (!/fill-rule="evenodd"/.test(raw)) {
+      errors.push(
+        `${dir}/${name}.svg must set fill-rule="evenodd" so counter subpaths punch holes ` +
+          `instead of filling solid`,
+      );
+    }
+    if (/stroke="currentColor"/.test(raw)) {
+      errors.push(`${dir}/${name}.svg is a solid master but strokes currentColor`);
+    }
+  }
   return data;
 }
 
@@ -130,12 +147,23 @@ const basePaths = {};
 const modifierPaths = {};
 const basePaths16 = {};
 const modifierPaths16 = {};
+const solidPaths = {};
+const solidPaths16 = {};
 
 for (const name of Object.keys(manifest.bases)) {
   basePaths[name] = optimisePaths(readMaster("bases", name), `bases/${name}`);
   basePaths16[name] = optimisePaths(
     readMaster("bases-16", name, { canvas: 16, optional: true }),
     `bases-16/${name}`,
+    16,
+  );
+  solidPaths[name] = optimisePaths(
+    readMaster("bases-filled", name, { optional: true, solid: true }),
+    `bases-filled/${name}`,
+  );
+  solidPaths16[name] = optimisePaths(
+    readMaster("bases-filled-16", name, { canvas: 16, optional: true, solid: true }),
+    `bases-filled-16/${name}`,
     16,
   );
 }
@@ -174,6 +202,18 @@ for (const name of Object.keys(manifest.currencies ?? {})) {
     `currency-16/${name}`,
     16,
   );
+}
+
+for (const name of Object.keys(manifest.bases)) {
+  if (solidPaths[name] && manifest.bases[name].fill) {
+    errors.push(
+      `${name} has both a drawn filled master and a derived fill in the manifest — ` +
+        `pick one, or the two will drift apart`,
+    );
+  }
+  if (!solidPaths[name] && solidPaths16[name]) {
+    warnings.push(`${name} has a 16px filled master but no 24px one`);
+  }
 }
 
 /* every file on disk must be declared, or it silently never ships */
@@ -282,6 +322,12 @@ const pathsModule = [
   ...Object.entries(modifierPaths16)
     .filter(([, p]) => p != null)
     .map(([n, p]) => `export const ${camel(n)}ModifierPaths16 = ${arr(p)} as const;\n`),
+  ...Object.entries(solidPaths)
+    .filter(([, p]) => p != null)
+    .map(([n, p]) => `export const ${camel(n)}SolidPaths = ${arr(p)} as const;\n`),
+  ...Object.entries(solidPaths16)
+    .filter(([, p]) => p != null)
+    .map(([n, p]) => `export const ${camel(n)}SolidPaths16 = ${arr(p)} as const;\n`),
   ...Object.entries(currencyPaths).map(
     ([n, p]) => `export const ${camel(n)}CoinPaths = ${arr(p)} as const;\n`,
   ),
@@ -334,18 +380,39 @@ function fillLiteral(cfg) {
   return cfg ? `, fill: { container: ${cfg.container}, knockout: [${cfg.knockout}] }` : "";
 }
 
+/** A drawn filled master supersedes the derived one. */
+function solidLiteral(baseName, sixteen) {
+  const has = (sixteen ? solidPaths16 : solidPaths)[baseName];
+  return has ? `, solid: ${camel(baseName)}SolidPaths${sixteen ? "16" : ""}` : "";
+}
+function solidName(baseName, sixteen) {
+  const has = (sixteen ? solidPaths16 : solidPaths)[baseName];
+  return has ? [`${camel(baseName)}SolidPaths${sixteen ? "16" : ""}`] : [];
+}
+
+/**
+ * A currency master is a closed ring followed by its glyph, always drawn inside
+ * it — the same shape the derivation needs, so every currency coin fills.
+ */
+function coinFill(paths) {
+  if (!paths) return null;
+  return { container: 0, knockout: paths.map((_, i) => i).filter((i) => i !== 0) };
+}
+
 function resolve(icon) {
   if (icon.currency) {
     const sym = `${camel(icon.currency)}CoinPaths`;
+    const fLg = coinFill(currencyPaths[icon.currency]);
+    const fSm = coinFill(currencyPaths16[icon.currency]);
     return {
       lgNames: [sym],
-      lg: `{ base: ${sym} }`,
+      lg: `{ base: ${sym}${fillLiteral(fLg)} }`,
       smNames: currencyPaths16[icon.currency] ? [`${sym}16`] : null,
-      sm: currencyPaths16[icon.currency] ? `{ base: ${sym}16 }` : null,
+      sm: currencyPaths16[icon.currency] ? `{ base: ${sym}16${fillLiteral(fSm)} }` : null,
       lgPaths: { base: currencyPaths[icon.currency] },
       smPaths: currencyPaths16[icon.currency] ? { base: currencyPaths16[icon.currency] } : null,
       note: `${icon.symbol} — covers ${icon.covers.join(", ")}`,
-      hasFilled: false,
+      hasFilled: fLg != null,
     };
   }
 
@@ -359,29 +426,33 @@ function resolve(icon) {
 
   if (!icon.modifier) {
     return {
-      lgNames: [`${b}Paths`],
-      lg: `{ base: ${b}Paths${fillLiteral(fillLg)} }`,
-      smNames: small ? [`${b}Paths16`] : null,
-      sm: small ? `{ base: ${b}Paths16${fillLiteral(fillSm)} }` : null,
+      lgNames: [`${b}Paths`, ...solidName(icon.base, false)],
+      lg: `{ base: ${b}Paths${fillLiteral(fillLg)}${solidLiteral(icon.base, false)} }`,
+      smNames: small ? [`${b}Paths16`, ...solidName(icon.base, true)] : null,
+      sm: small
+        ? `{ base: ${b}Paths16${fillLiteral(fillSm)}${solidLiteral(icon.base, true)} }`
+        : null,
       lgPaths: { base: basePaths[icon.base] },
       smPaths: small ? { base: basePaths16[icon.base] } : null,
       note: icon.base,
-      hasFilled: fillLg != null,
+      hasFilled: fillLg != null || solidPaths[icon.base] != null,
     };
   }
 
   const m = camel(icon.modifier);
   return {
-    lgNames: [`${b}Paths`, `${m}ModifierPaths`],
-    lg: `{ base: ${b}Paths, modifier: ${m}ModifierPaths${fillLiteral(fillLg)} }`,
-    smNames: small ? [`${b}Paths16`, `${m}ModifierPaths16`] : null,
-    sm: small ? `{ base: ${b}Paths16, modifier: ${m}ModifierPaths16${fillLiteral(fillSm)} }` : null,
+    lgNames: [`${b}Paths`, `${m}ModifierPaths`, ...solidName(icon.base, false)],
+    lg: `{ base: ${b}Paths, modifier: ${m}ModifierPaths${fillLiteral(fillLg)}${solidLiteral(icon.base, false)} }`,
+    smNames: small ? [`${b}Paths16`, `${m}ModifierPaths16`, ...solidName(icon.base, true)] : null,
+    sm: small
+      ? `{ base: ${b}Paths16, modifier: ${m}ModifierPaths16${fillLiteral(fillSm)}${solidLiteral(icon.base, true)} }`
+      : null,
     lgPaths: { base: basePaths[icon.base], modifier: modifierPaths[icon.modifier] },
     smPaths: small
       ? { base: basePaths16[icon.base], modifier: modifierPaths16[icon.modifier] }
       : null,
     note: `${icon.base} + ${icon.modifier}`,
-    hasFilled: fillLg != null,
+    hasFilled: fillLg != null || solidPaths[icon.base] != null,
   };
 }
 

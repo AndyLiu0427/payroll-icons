@@ -83,9 +83,20 @@ function geometryFor(icon, size) {
   return { base, modifier };
 }
 
+/** A drawn filled master, when the icon has one at this size. */
+function solidFor(icon, size) {
+  if (!icon.base) return null;
+  return PATHS[`${camel(icon.base)}SolidPaths${size === 16 ? "16" : ""}`] ?? null;
+}
+
 function fillFor(icon, base) {
+  if (!base) return null;
+  // A currency master is a closed ring plus its glyph, always drawn inside it.
+  if (icon.symbol) {
+    return { container: 0, knockout: base.map((_, i) => i).filter((i) => i !== 0) };
+  }
   const spec = manifest.bases[icon.base]?.fill;
-  if (!spec || !base) return null;
+  if (!spec) return null;
   const skip = spec.skip ?? [];
   return {
     container: spec.container,
@@ -107,6 +118,20 @@ function render(icon, size, style) {
   const id = `ko-${icon.name}-${size}-${style}`;
 
   if (style === "filled") {
+    const solid = solidFor(icon, size);
+    if (solid) {
+      const body = solid
+        .map((d) => `<path d="${d}" fill="currentColor" fill-rule="evenodd"/>`)
+        .join("");
+      return geo.modifier
+        ? `${open}<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${g.canvas}" height="${g.canvas}">` +
+            `<rect x="0" y="0" width="${g.canvas}" height="${g.canvas}" fill="#fff" stroke="none"/>` +
+            `<circle cx="${g.centre}" cy="${g.centre}" r="${g.knockout}" fill="#000" stroke="none"/></mask>` +
+            `<g mask="url(#${id})">${body}</g>` +
+            geo.modifier.map((d) => p(d, ' data-modifier=""')).join("") +
+            `</svg>\n`
+        : `${open}${body}</svg>\n`;
+    }
     const fill = fillFor(icon, geo.base);
     if (!fill) return null;
     const body = geo.base[fill.container];
