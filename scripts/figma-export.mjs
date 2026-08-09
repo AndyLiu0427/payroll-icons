@@ -43,7 +43,7 @@ const PATHS = readPathArrays(pathsSrc);
 /** And the registry rows, which carry the metadata we need for naming. */
 const icons = [
   ...registrySrc.matchAll(
-    /\{ name: "([^"]+)", zh: "([^"]*)", group: "([^"]+)", tier: "([^"]+)",([^}]*)\}/g,
+    /\{ name: "([^"]+)", zh: "([^"]*)", group: "([^"]+)", set: "([^"]+)",([^}]*)\}/g,
   ),
 ].map((m) => {
   const rest = m[5];
@@ -52,7 +52,7 @@ const icons = [
     name: m[1],
     zh: m[2],
     group: m[3],
-    tier: m[4],
+    set: m[4],
     base: grab("base"),
     modifier: grab("modifier"),
     symbol: grab("symbol"),
@@ -60,6 +60,15 @@ const icons = [
     hasFilled: /hasFilled: true/.test(rest),
   };
 });
+
+if (!icons.length) {
+  console.error(
+    "\n✗ parsed 0 icons out of src/generated/registry.ts — the generated shape has" +
+      "\n  changed and the parser above no longer matches. Run `npm run icons` first;" +
+      "\n  if that is not it, the field list in the regex needs updating.\n",
+  );
+  process.exit(1);
+}
 
 const GRID = {
   24: { canvas: 24, centre: 17.5, knockout: 5.5, stroke: 1.5 },
@@ -189,7 +198,7 @@ for (const icon of icons) {
     /* Slashes group the component in Figma's assets panel. */
     component: `Payroll/${icon.group}/${icon.name}`,
     description: icon.zh + (icon.modifier ? ` (${icon.base} + ${icon.modifier})` : ""),
-    tier: icon.tier,
+    set: icon.set,
     /* Property names match the React props, so both sides say the same words. */
     variantProperties: {
       size: [...new Set(variants.map((v) => v.size))],

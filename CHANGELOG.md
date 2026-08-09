@@ -12,6 +12,11 @@ release — the drawings are still settling. The component API will not.
 
 ### Changed
 
+- **Breaking (registry shape).** `tier: "free" | "pro"` on registry entries is
+  now `set: "core" | "extended"`. The old name implied a paywall that does not
+  exist — everything ships under one MIT licence. The new name describes what
+  the field actually does: curate a starting subset. `npm run icons:free` is
+  now `npm run icons:core`.
 - `homepage` now points at the documentation site rather than the README.
 
 ## [0.1.0] — 2026-08-09

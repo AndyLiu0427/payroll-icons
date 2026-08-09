@@ -1,4 +1,5 @@
 {
+  "$comment_set": "`set` curates rather than gates. Everything ships, under one MIT licence — core is the 26 marks nearly every payroll product needs, extended is the long tail. It drives `npm run icons:core`, which is a curation aid, not a paywall.",
   "$comment": "Metadata for every authored master. Geometry lives in the .svg files; this file says what each mark means and how it may be used. The build reads this to decide what to generate.",
 
   "grid": {
@@ -15,35 +16,35 @@
       "zh": "薪資單",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "invoice": {
       "zh": "發票 / 請款單",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "contract": {
       "zh": "合約",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "tax-form": {
       "zh": "稅務表單 / 扣繳",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "statement": {
       "zh": "對帳單",
       "group": "documents",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "full-width bar chart runs into the modifier zone",
       "fill": { "container": 0 }
     },
@@ -51,20 +52,20 @@
       "zh": "多筆文件 / 批次",
       "group": "documents",
       "composable": true,
-      "tier": "free"
+      "set": "core"
     },
     "receipt": {
       "zh": "收據",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "ledger": {
       "zh": "總帳 / 帳冊",
       "group": "documents",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "note": "no derivable filled form — the spine follows the container edge, so knocking it out bites the silhouette, and skipping it leaves a shape indistinguishable from a filled invoice"
     },
 
@@ -72,15 +73,15 @@
       "zh": "出勤工時",
       "group": "time",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "conflicts": ["pending"]
     },
-    "calendar": { "zh": "日曆 / 期間", "group": "time", "composable": true, "tier": "free" },
+    "calendar": { "zh": "日曆 / 期間", "group": "time", "composable": true, "set": "core" },
     "clock": {
       "zh": "工時 / 時數",
       "group": "time",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "conflicts": ["pending"],
       "fill": { "container": 0 }
     },
@@ -89,30 +90,30 @@
       "zh": "金額 / 幣值",
       "group": "money",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
     "banknote": {
       "zh": "現金 / 鈔票",
       "group": "money",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "wide and short — knockout eats a run of the bottom edge, not a corner",
       "fill": { "container": 0 }
     },
-    "bank": { "zh": "銀行 / 帳戶", "group": "money", "composable": true, "tier": "free" },
+    "bank": { "zh": "銀行 / 帳戶", "group": "money", "composable": true, "set": "core" },
     "exchange": {
       "zh": "匯率 / 多幣別",
       "group": "money",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "arrows span the full width"
     },
     "balance": {
       "zh": "對帳 / 平衡",
       "group": "money",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "right pan and base sit in the modifier zone"
     },
 
@@ -120,39 +121,39 @@
       "zh": "法定給付 / 保險",
       "group": "statutory",
       "composable": true,
-      "tier": "free",
+      "set": "core",
       "fill": { "container": 0 }
     },
 
-    "employee": { "zh": "員工", "group": "organisation", "composable": true, "tier": "free" },
+    "employee": { "zh": "員工", "group": "organisation", "composable": true, "set": "core" },
     "team": {
       "zh": "團隊 / 人數",
       "group": "organisation",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "second figure occupies the modifier zone"
     },
     "org-chart": {
       "zh": "部門 / 成本中心",
       "group": "organisation",
       "composable": false,
-      "tier": "free",
+      "set": "core",
       "note": "right child node sits in the modifier zone"
     },
 
-    "pay-run": { "zh": "薪資批次", "group": "process", "composable": true, "tier": "free" }
+    "pay-run": { "zh": "薪資批次", "group": "process", "composable": true, "set": "core" }
   },
 
   "modifiers": {
-    "approved": { "zh": "已核准 / 已付", "tier": "free" },
-    "pending": { "zh": "待處理", "tier": "free", "glyph": "clock" },
-    "recurring": { "zh": "週期性", "tier": "free" },
-    "exception": { "zh": "異常 / 需查核", "tier": "free" },
-    "locked": { "zh": "已關帳 / 鎖定", "tier": "free" },
-    "down": { "zh": "扣除 / 支出", "tier": "free" },
-    "up": { "zh": "加給 / 收入", "tier": "free" },
-    "plus": { "zh": "新增 / 加項", "tier": "free" },
-    "minus": { "zh": "移除 / 減項", "tier": "free" }
+    "approved": { "zh": "已核准 / 已付", "set": "core" },
+    "pending": { "zh": "待處理", "set": "core", "glyph": "clock" },
+    "recurring": { "zh": "週期性", "set": "core" },
+    "exception": { "zh": "異常 / 需查核", "set": "core" },
+    "locked": { "zh": "已關帳 / 鎖定", "set": "core" },
+    "down": { "zh": "扣除 / 支出", "set": "core" },
+    "up": { "zh": "加給 / 收入", "set": "core" },
+    "plus": { "zh": "新增 / 加項", "set": "core" },
+    "minus": { "zh": "移除 / 減項", "set": "core" }
   },
 
   "$comment_currency": "Currency coins are named by symbol, not by ISO code: a dollar sign cannot distinguish USD from SGD from AUD, and an icon that claims to would be lying. `covers` records which currencies each mark legitimately stands for — use it to drive a picker, and let the product label carry the actual code. All of these are display-only: the glyph fills the coin, so there is no room for a badge, and you would badge the generic `coin` anyway.",
@@ -162,26 +163,26 @@
       "zh": "美元 / 新幣 / 澳幣",
       "symbol": "$",
       "covers": ["USD", "SGD", "AUD", "HKD", "TWD", "NZD", "CAD"],
-      "tier": "pro"
+      "set": "extended"
     },
-    "euro": { "zh": "歐元", "symbol": "€", "covers": ["EUR"], "tier": "pro" },
-    "pound": { "zh": "英鎊", "symbol": "£", "covers": ["GBP"], "tier": "pro" },
-    "yen": { "zh": "日圓 / 人民幣", "symbol": "¥", "covers": ["JPY", "CNY"], "tier": "pro" },
-    "peso": { "zh": "菲律賓披索", "symbol": "₱", "covers": ["PHP"], "tier": "pro" },
-    "dong": { "zh": "越南盾", "symbol": "₫", "covers": ["VND"], "tier": "pro" },
-    "baht": { "zh": "泰銖", "symbol": "฿", "covers": ["THB"], "tier": "pro" },
+    "euro": { "zh": "歐元", "symbol": "€", "covers": ["EUR"], "set": "extended" },
+    "pound": { "zh": "英鎊", "symbol": "£", "covers": ["GBP"], "set": "extended" },
+    "yen": { "zh": "日圓 / 人民幣", "symbol": "¥", "covers": ["JPY", "CNY"], "set": "extended" },
+    "peso": { "zh": "菲律賓披索", "symbol": "₱", "covers": ["PHP"], "set": "extended" },
+    "dong": { "zh": "越南盾", "symbol": "₫", "covers": ["VND"], "set": "extended" },
+    "baht": { "zh": "泰銖", "symbol": "฿", "covers": ["THB"], "set": "extended" },
     "ringgit": {
       "zh": "馬幣",
       "symbol": "RM",
       "covers": ["MYR"],
-      "tier": "pro",
+      "set": "extended",
       "note": "two letters — no 16px master, falls back to the 24px one"
     },
     "rupiah": {
       "zh": "印尼盾",
       "symbol": "Rp",
       "covers": ["IDR"],
-      "tier": "pro",
+      "set": "extended",
       "note": "two letters — no 16px master, falls back to the 24px one"
     }
   },
@@ -192,115 +193,133 @@
       "base": "payslip",
       "modifier": "pending",
       "zh": "薪資單待審",
-      "tier": "free"
+      "set": "core"
     },
     {
       "name": "payslip-approved",
       "base": "payslip",
       "modifier": "approved",
       "zh": "薪資單已核准",
-      "tier": "free"
+      "set": "core"
     },
     {
       "name": "invoice-exception",
       "base": "invoice",
       "modifier": "exception",
       "zh": "請款異常",
-      "tier": "free"
+      "set": "core"
     },
-    { "name": "deduction", "base": "coin", "modifier": "down", "zh": "扣除額", "tier": "free" },
-    { "name": "allowance", "base": "coin", "modifier": "up", "zh": "津貼 / 加給", "tier": "free" },
+    { "name": "deduction", "base": "coin", "modifier": "down", "zh": "扣除額", "set": "core" },
+    { "name": "allowance", "base": "coin", "modifier": "up", "zh": "津貼 / 加給", "set": "core" },
 
     {
       "name": "pay-run-recurring",
       "base": "pay-run",
       "modifier": "recurring",
       "zh": "定期薪資批次",
-      "tier": "pro"
+      "set": "extended"
     },
-    { "name": "bonus", "base": "coin", "modifier": "plus", "zh": "獎金", "tier": "pro" },
+    { "name": "bonus", "base": "coin", "modifier": "plus", "zh": "獎金", "set": "extended" },
     {
       "name": "recurring-payment",
       "base": "coin",
       "modifier": "recurring",
       "zh": "定期給付",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "timesheet-exception",
       "base": "timesheet",
       "modifier": "exception",
       "zh": "工時異常",
-      "tier": "pro"
+      "set": "extended"
     },
-    { "name": "overtime", "base": "clock", "modifier": "plus", "zh": "加班", "tier": "pro" },
-    { "name": "shift", "base": "clock", "modifier": "recurring", "zh": "排班", "tier": "pro" },
-    { "name": "leave", "base": "calendar", "modifier": "minus", "zh": "請假", "tier": "pro" },
+    { "name": "overtime", "base": "clock", "modifier": "plus", "zh": "加班", "set": "extended" },
+    { "name": "shift", "base": "clock", "modifier": "recurring", "zh": "排班", "set": "extended" },
+    { "name": "leave", "base": "calendar", "modifier": "minus", "zh": "請假", "set": "extended" },
     {
       "name": "period-closed",
       "base": "calendar",
       "modifier": "locked",
       "zh": "期間已關帳",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "tax-filed",
       "base": "tax-form",
       "modifier": "approved",
       "zh": "報稅完成",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "pension-contribution",
       "base": "shield",
       "modifier": "up",
       "zh": "退休金提撥",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "subscription",
       "base": "invoice",
       "modifier": "recurring",
       "zh": "訂閱制帳單",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "credit-note",
       "base": "invoice",
       "modifier": "minus",
       "zh": "折讓單",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "reimbursement",
       "base": "receipt",
       "modifier": "up",
       "zh": "費用核銷",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "contract-signed",
       "base": "contract",
       "modifier": "approved",
       "zh": "合約已簽署",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "ledger-locked",
       "base": "ledger",
       "modifier": "locked",
       "zh": "總帳鎖定",
-      "tier": "pro"
+      "set": "extended"
     },
     {
       "name": "disbursement",
       "base": "bank",
       "modifier": "up",
       "zh": "撥款 / 匯出",
-      "tier": "pro"
+      "set": "extended"
     },
-    { "name": "deposit", "base": "bank", "modifier": "down", "zh": "入帳 / 收款", "tier": "pro" },
-    { "name": "onboarding", "base": "employee", "modifier": "plus", "zh": "到職", "tier": "pro" },
-    { "name": "offboarding", "base": "employee", "modifier": "minus", "zh": "離職", "tier": "pro" }
+    {
+      "name": "deposit",
+      "base": "bank",
+      "modifier": "down",
+      "zh": "入帳 / 收款",
+      "set": "extended"
+    },
+    {
+      "name": "onboarding",
+      "base": "employee",
+      "modifier": "plus",
+      "zh": "到職",
+      "set": "extended"
+    },
+    {
+      "name": "offboarding",
+      "base": "employee",
+      "modifier": "minus",
+      "zh": "離職",
+      "set": "extended"
+    }
   ]
 }

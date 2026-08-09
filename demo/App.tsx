@@ -26,7 +26,7 @@ export default function App() {
   const [size, setSize] = useState<number>(24);
   const [stroke, setStroke] = useState<number | "auto">("auto");
   const [animate, setAnimate] = useState(false);
-  const [tier, setTier] = useState<"all" | "free" | "pro">("all");
+  const [set, setSet] = useState<"all" | "core" | "extended">("all");
   const [copied, setCopied] = useState<string | null>(null);
   const [replayKey, setReplayKey] = useState(0);
   const [compare, setCompare] = useState(false);
@@ -35,7 +35,7 @@ export default function App() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return registry.filter((i) => {
-      if (tier !== "all" && i.tier !== tier) return false;
+      if (set !== "all" && i.set !== set) return false;
       if (!q) return true;
       return (
         i.name.includes(q) ||
@@ -45,7 +45,7 @@ export default function App() {
         (i.covers?.some((c) => c.toLowerCase().includes(q)) ?? false)
       );
     });
-  }, [query, tier]);
+  }, [query, set]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, IconMeta[]>();
@@ -67,7 +67,7 @@ export default function App() {
     }
   }
 
-  const freeCount = registry.filter((i) => i.tier === "free").length;
+  const coreCount = registry.filter((i) => i.set === "core").length;
 
   return (
     <div className="sheet">
@@ -87,8 +87,8 @@ export default function App() {
             <dd>{registry.length}</dd>
           </div>
           <div className="field">
-            <dt>Free tier</dt>
-            <dd>{freeCount}</dd>
+            <dt>Core set</dt>
+            <dd>{coreCount}</dd>
           </div>
           <div className="field">
             <dt>Grid</dt>
@@ -130,9 +130,9 @@ export default function App() {
         </div>
 
         <div className="ctrl">
-          <span className="ctrl__label">Tier</span>
-          {(["all", "free", "pro"] as const).map((t) => (
-            <button key={t} type="button" aria-pressed={tier === t} onClick={() => setTier(t)}>
+          <span className="ctrl__label">Set</span>
+          {(["all", "core", "extended"] as const).map((t) => (
+            <button key={t} type="button" aria-pressed={set === t} onClick={() => setSet(t)}>
               {t}
             </button>
           ))}
@@ -232,7 +232,7 @@ export default function App() {
                     <span className="cell__covers">{icon.covers.slice(0, 4).join(" · ")}</span>
                   )}
                   {filled && !icon.hasFilled && <span className="cell__nofill">outline only</span>}
-                  {icon.tier === "pro" && <span className="cell__tier">pro</span>}
+                  {icon.set === "extended" && <span className="cell__tier">ext</span>}
                   {copied === icon.name && <span className="cell__copied">Copied import</span>}
                 </button>
               );

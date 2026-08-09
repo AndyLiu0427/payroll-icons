@@ -15,8 +15,8 @@
  * Composition is a build step, not a runtime lookup, so bundlers can drop the
  * icons an app does not use.
  *
- *   node scripts/build.mjs            all icons
- *   node scripts/build.mjs --tier free   free-tier subset only
+ *   node scripts/build.mjs             all icons
+ *   node scripts/build.mjs --set core   the curated core subset
  */
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
@@ -27,9 +27,9 @@ const ICONS = join(ROOT, "icons");
 const GEN = join(ROOT, "src/generated");
 const DIST_SVG = join(ROOT, "dist/svg");
 
-const tierArg = process.argv.indexOf("--tier");
-const TIER = tierArg !== -1 ? process.argv[tierArg + 1] : "pro";
-const TIERS = TIER === "free" ? new Set(["free"]) : new Set(["free", "pro"]);
+const setArg = process.argv.indexOf("--set");
+const SET = setArg !== -1 ? process.argv[setArg + 1] : "all";
+const SETS = SET === "core" ? new Set(["core"]) : new Set(["core", "extended"]);
 
 const manifest = JSON.parse(readFileSync(join(ICONS, "manifest.json"), "utf8"));
 const errors = [];
@@ -279,25 +279,25 @@ const camel = (s) => s.replace(/[-_](\w)/g, (_, c) => c.toUpperCase());
 /** Everything that ships, flattened: plain bases first, then composed marks. */
 const icons = [
   ...Object.entries(manifest.bases)
-    .filter(([, m]) => TIERS.has(m.tier))
-    .map(([name, m]) => ({ name, zh: m.zh, group: m.group, tier: m.tier, base: name })),
+    .filter(([, m]) => SETS.has(m.set))
+    .map(([name, m]) => ({ name, zh: m.zh, group: m.group, set: m.set, base: name })),
   ...manifest.compositions
-    .filter((c) => TIERS.has(c.tier))
+    .filter((c) => SETS.has(c.set))
     .map((c) => ({
       name: c.name,
       zh: c.zh,
       group: manifest.bases[c.base].group,
-      tier: c.tier,
+      set: c.set,
       base: c.base,
       modifier: c.modifier,
     })),
   ...Object.entries(manifest.currencies ?? {})
-    .filter(([, m]) => TIERS.has(m.tier))
+    .filter(([, m]) => SETS.has(m.set))
     .map(([name, m]) => ({
       name: `coin-${name}`,
       zh: m.zh,
       group: "currency",
-      tier: m.tier,
+      set: m.set,
       currency: name,
       symbol: m.symbol,
       covers: m.covers,
@@ -519,7 +519,8 @@ export interface IconMeta {
   name: string;
   zh: string;
   group: string;
-  tier: "free" | "pro";
+  /** Curation, not a licence boundary — everything ships. */
+  set: "core" | "extended";
   /** The base this is drawn from. Absent on currency coins, which stand alone. */
   base?: string;
   modifier?: string;
@@ -543,7 +544,7 @@ ${icons
     const r = resolve(i);
     return (
       `  { name: ${JSON.stringify(i.name)}, zh: ${JSON.stringify(i.zh)}, ` +
-      `group: ${JSON.stringify(i.group)}, tier: ${JSON.stringify(i.tier)}, ` +
+      `group: ${JSON.stringify(i.group)}, set: ${JSON.stringify(i.set)}, ` +
       (i.base ? `base: ${JSON.stringify(i.base)}, ` : "") +
       (i.modifier ? `modifier: ${JSON.stringify(i.modifier)}, ` : "") +
       (i.symbol ? `symbol: ${JSON.stringify(i.symbol)}, ` : "") +
@@ -579,7 +580,7 @@ if (warnings.length) {
 }
 const optical = smallCount === icons.length ? "all" : `${smallCount}/${icons.length}`;
 console.log(
-  `\n✓ tier "${TIER}": ${icons.length} icons ` +
+  `\n✓ set "${SET}": ${icons.length} icons ` +
     `(${icons.length - composed} drawn, ${composed} composed) ` +
     `from ${Object.keys(basePaths).length} bases + ${Object.keys(modifierPaths).length} modifiers` +
     `\n  ${optical} have a dedicated 16px optical master` +

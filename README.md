@@ -264,7 +264,7 @@ icons/
   bases-filled-16/*.svg   11 of those at 16 units
   currency/*.svg      9 currency coins — complete icons, ring plus glyph
   currency-16/*.svg   7 of those at 16 units; two-letter marks are 24 only
-  manifest.json      what each mark means, how it may be used, which tier
+  manifest.json      what each mark means, how it may be used, which set
 scripts/build.mjs    validate → optimise → compose → emit
 src/
   createIcon.tsx     the runtime (masking, sizing, a11y)
@@ -280,7 +280,7 @@ is written by hand.
 
 1. Draw it on the 24 × 24 grid, stroke 1.5, paths only, and save to `icons/bases/`.
 2. Add `pathLength="1"` to every path.
-3. Declare it in `icons/manifest.json` with its group, tier, and whether it is composable.
+3. Declare it in `icons/manifest.json` with its group, set, and whether it is composable.
 4. Draw the 16-unit master into `icons/bases-16/` with the same filename. Optional —
    without it the icon still works, it just scales the large master down at small sizes.
 5. `npm run icons` — the build validates the files and generates everything else.
@@ -297,31 +297,46 @@ real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` sur
 | Command | Does |
 | --- | --- |
 | `npm run icons` | Validate masters and generate components, data and SVGs |
-| `npm run icons:free` | Same, free tier only |
+| `npm run icons:core` | Same, curated core subset only |
 | `npm run figma` | Generate, then emit the Figma import bundle |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
 | `npm run typecheck` | `tsc --noEmit` across src, demo and scripts |
 | `npm run lint` | Biome |
 
-## Tiers
+## Core and extended
 
-`tier` in the manifest drives `npm run icons:free`, which builds a subset.
+Everything in this package ships, under one MIT licence. There is no paid tier
+and no gated subset — an earlier plan for one was dropped because it would not
+have held: the bases, the modifiers and the composition rules are all published
+here, so anyone can compose the rest in a few minutes.
 
-Note on what that actually protects: withholding *compositions* is weak, since anyone with
-the free bases and modifiers can compose the rest themselves — the composition rules are
-published right here. Treat the tier field as packaging, not as a licence boundary. Real
-paid-tier value has to be additional artwork:
+`set` in the manifest curates rather than gates:
 
-- a published Figma library, which needs a paid Figma plan
-- a duotone or two-tone weight, if the product ever needs a third emphasis level
-- additional currency glyphs beyond the nine drawn (₹, ₩, ₪, ₦ …)
+- **core** (26) — the marks nearly every payroll product needs: all 21 bases,
+  plus the five states that come up immediately.
+- **extended** (28) — the long tail. Currency coins, and the composed states a
+  product reaches for once the basics are in place.
 
-## Releasing
+`npm run icons:core` builds the subset. It is an adoption aid, not a boundary —
+useful when introducing the set to a team and you want a short list to start
+from. For bundle size it does nothing: tree-shaking already drops what an app
+does not import.
 
-See [RELEASING.md](RELEASING.md). Publishing is triggered by a GitHub release,
-never by `npm publish` on a workstation, so what ships is always what is on
-`main`.
+The docs site has the same filter.
+
+## Commercial use
+
+MIT, so: use it in commercial products, modify it, redistribute it, no
+attribution required beyond keeping the licence notice.
+
+If you want something that is not here — marks for a domain this set does not
+cover, a house style applied across it, or an assembled Figma library with
+components and variants — that is work rather than a licence, and worth asking
+about at the issue tracker.
+
+Note that the Figma *import bundle* is not the paid part of that: `npm run
+figma` generates it from the public masters in one command.
 
 ## Licence
 
