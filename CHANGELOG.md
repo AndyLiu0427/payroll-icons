@@ -10,7 +10,11 @@ release — the drawings are still settling. The component API will not.
 
 ## [Unreleased]
 
-## [0.1.0] — unreleased
+### Changed
+
+- `homepage` now points at the documentation site rather than the README.
+
+## [0.1.0] — 2026-08-09
 
 First preview release.
 

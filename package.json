@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/AndyLiu0427/payroll-icons/issues"
   },
-  "homepage": "https://github.com/AndyLiu0427/payroll-icons#readme",
+  "homepage": "https://andyliu0427.github.io/payroll-icons/",
   "type": "module",
   "sideEffects": [
     "**/*.css"

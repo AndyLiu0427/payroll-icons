@@ -14,6 +14,9 @@ badge vocabulary instead of drawing a new mark for every combination.
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
 - **Tree-shakeable** — one icon is ~1.3 kB gzipped, three are ~1.5 kB; the set never ships whole
 
+**[Browse every icon →](https://andyliu0427.github.io/payroll-icons/)** — search in English or
+Chinese, switch size and weight, click to copy the import.
+
 ```bash
 npm install @octomate/payroll-icons
 ```
