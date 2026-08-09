@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import pkg from "../package.json";
 import type { IconMeta } from "../src/generated/registry";
 import { registry } from "../src/generated/registry";
 
@@ -95,7 +96,7 @@ export default function App() {
           </div>
           <div className="field">
             <dt>Version</dt>
-            <dd>0.1.0 draft</dd>
+            <dd>{pkg.version}</dd>
           </div>
         </dl>
       </header>

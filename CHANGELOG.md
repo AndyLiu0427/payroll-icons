@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 While the major version is 0, the shape of a mark may change in a minor
 release — the drawings are still settling. The component API will not.
 
+## [Unreleased]
+
 ## [0.1.0] — unreleased
 
 First preview release.

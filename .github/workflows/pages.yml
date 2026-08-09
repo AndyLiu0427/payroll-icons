@@ -1,12 +1,8 @@
 name: Docs
 
-# Manual only while the repository is private — GitHub Pages needs a paid plan
-# for private repos, so an automatic push trigger would fail on every commit.
-# Restore the `push` trigger below when the repository goes public.
-#
-#   push:
-#     branches: [main]
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -19,7 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # GitHub Pages needs a paid plan for private repositories, so this would fail
+  # on every push while the repo is private. Skipping on visibility rather than
+  # commenting the trigger out means it starts working the moment the repo goes
+  # public, with nothing to remember. A manual run is never skipped, so the
+  # build can still be exercised.
   build:
+    if: github.event.repository.private == false || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

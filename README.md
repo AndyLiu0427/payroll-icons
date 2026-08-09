@@ -1,6 +1,7 @@
 # Payroll Icon System
 
-Icons for payroll, time and attendance, statutory contributions, billing and payments.
+**54 icons** for payroll, time and attendance, statutory contributions, billing and
+payments — each in two optical sizes and two weights.
 
 Generic icon sets give you one `file-text` for a payslip, an invoice, a receipt and a
 withholding certificate. This set forces them apart, and expresses state through a fixed
@@ -11,7 +12,7 @@ badge vocabulary instead of drawing a new mark for every combination.
 - **Currency-neutral by default** — `coin` ships blank; nine currency coins cover the rest
 - **Outline and filled** — every mark has both weights, at both optical sizes
 - **Animation-ready** — every path carries `pathLength="1"`, so one CSS rule times the whole library
-- **Tree-shakeable** — importing one icon costs ~1.4 kB; the set never ships whole
+- **Tree-shakeable** — one icon is ~1.3 kB gzipped, three are ~1.5 kB; the set never ships whole
 
 ```bash
 npm install @octomate/payroll-icons
@@ -312,6 +313,12 @@ paid-tier value has to be additional artwork:
 - a published Figma library, which needs a paid Figma plan
 - a duotone or two-tone weight, if the product ever needs a third emphasis level
 - additional currency glyphs beyond the nine drawn (₹, ₩, ₪, ₦ …)
+
+## Releasing
+
+See [RELEASING.md](RELEASING.md). Publishing is triggered by a GitHub release,
+never by `npm publish` on a workstation, so what ships is always what is on
+`main`.
 
 ## Licence
 
