@@ -20,16 +20,56 @@ None of these block publishing. They just mean the package page has dead links
 and no provenance badge. Both workflows pick the capability up automatically
 when the repository becomes public — there is nothing to change.
 
-**Confirm the npm scope.** `npm access` and `npm org` both hit organisation
-endpoints a publish-only token is not granted, so a 403 there is expected and
-proves nothing. The authority is the token's own page at
-npmjs.com/settings/~/tokens: it must list the scope in `package.json` under
-"Packages and scopes" with read and write.
+## The publish token
+
+A granular access token at npmjs.com/settings/~/tokens, configured as:
+
+| Field | Value |
+| --- | --- |
+| Packages and scopes | Read and write, on the **scope** — not a package |
+| Organizations | No access |
+| Allowed IP ranges | Empty |
+| **Bypass two-factor authentication** | **Enabled** |
+
+Two of those are easy to get wrong and both cost a failed release.
+
+**Scope, not package.** A granular token can only select packages that already
+exist, so a package being published for the first time will not appear in the
+list. Selecting the scope covers packages created inside it later.
+
+**Bypass 2FA.** If the npm account has two-factor authentication on — and it
+should — CI cannot answer the prompt, so the token has to be marked as allowed
+to skip it. Without it the build passes, provenance is signed and logged, and
+the very last call fails:
+
+```
+npm error code E403
+npm error 403 Forbidden - PUT https://registry.npmjs.org/@octomate%2fpayroll-icons
+  Two-factor authentication or granular access token with bypass 2fa enabled
+  is required to publish packages.
+```
+
+Nothing is published when this happens, so the version number is not burned.
+Fix the token, update the secret, and re-run the failed job:
+
+```bash
+gh secret set NPM_TOKEN --repo AndyLiu0427/payroll-icons
+gh run rerun <run-id> --failed --repo AndyLiu0427/payroll-icons
+```
+
+`gh run rerun` may print "cannot be rerun" and re-run it anyway. Check the run,
+not the message.
+
+**Checking the scope is a dead end.** `npm access` and `npm org` both hit
+organisation endpoints this token is deliberately not granted, so a 403 there
+is expected and says nothing about publish permission. The token's own settings
+page is the only authority.
 
 ## Every release
 
 1. **Preflight.** Publishes nothing; checks the token, the scope, and the
-   tarball contents.
+   tarball contents. It cannot detect a missing 2FA bypass — that only surfaces
+   on the real publish.
 
    ```bash
    gh workflow run publish.yml --repo AndyLiu0427/payroll-icons
@@ -45,7 +85,8 @@ npmjs.com/settings/~/tokens: it must list the scope in `package.json` under
 3. **Commit and push.** CI must be green; it runs the same build, typecheck,
    lint and smoke test the publish workflow will.
 
-4. **Cut the release.** This is the irreversible step. npm allows unpublish
+4. **Cut the release.** This is the irreversible step, and creating the release
+   *is* the publish — there is no separate confirmation. npm allows unpublish
    only within 72 hours, and the version number is burned either way.
 
    ```bash
