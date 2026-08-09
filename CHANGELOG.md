@@ -10,6 +10,14 @@ release — the drawings are still settling. The component API will not.
 
 ## [Unreleased]
 
+### Added
+
+- A test suite. 35 tests covering the runtime's behaviour — size and stroke
+  resolution, optical master selection, the filled variant and its fallback,
+  the accessibility contract, mask-id uniqueness — and a snapshot of every
+  path array, which is the only thing that catches a drawing changing when it
+  should not have.
+
 ### Changed
 
 - **Breaking (registry shape).** `tier: "free" | "pro"` on registry entries is

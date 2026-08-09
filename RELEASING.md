@@ -116,6 +116,11 @@ which is how two release blockers reached a green build once already:
 - every entry point imports under real Node ESM
 - the metadata npm renders on the package page is present
 
+`npm test` pins the geometry. The build checks that masters are *well formed*;
+only the snapshot catches a drawing that *changed*. A refactor that moved a
+curve by 0.05 units would otherwise pass every gate and ship — verified by
+making exactly that edit and watching the snapshot fail.
+
 `npm run icons` additionally enforces the icon system's own rules, so a
 composition that breaks one fails the release rather than shipping.
 

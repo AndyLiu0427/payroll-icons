@@ -301,6 +301,7 @@ real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` sur
 | `npm run figma` | Generate, then emit the Figma import bundle |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
+| `npm test` | Vitest — runtime behaviour and the geometry snapshot |
 | `npm run typecheck` | `tsc --noEmit` across src, demo and scripts |
 | `npm run lint` | Biome |
 

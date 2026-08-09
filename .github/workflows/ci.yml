@@ -24,6 +24,11 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Pins the path data. The build validates that masters are well formed;
+      # only the snapshot catches a drawing that changed when it should not have.
+      - name: Test
+        run: npm test
+
       - name: Lint
         run: npm run lint
 
