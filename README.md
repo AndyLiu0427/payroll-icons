@@ -223,6 +223,22 @@ Components**, then **Combine as Variants** per icon.
 Publishing this as a shared Figma library needs a paid Figma plan; the bundle
 and naming are plan-independent.
 
+## Themes
+
+`currentColor` is the only colour in the package, so an icon takes the colour of
+whatever it sits in and no theme switch is needed.
+
+The filled variant is the part worth stating plainly, since it uses a mask: the
+knockouts cut through to **whatever is behind the icon**, not to white. Checked
+on white, near-black, a saturated blue surface and in an accent colour — the
+detail knocked out of a filled `payslip` shows the blue when it sits on blue.
+
+There is no separate dark-mode stroke weight. Light-on-dark does bleed slightly
+heavier, but at 1.5 units on a 24 grid the effect is small enough that a
+reduced weight was hard to tell from the shipped one, and not worth a second
+code path. Compared at 1.5, 1.35 and 1.25 against the light rendering before
+deciding.
+
 ## Animation
 
 Optional, opt-in, one import:
