@@ -35,5 +35,7 @@ jobs:
       - name: Smoke test the built package
         run: npm run smoke
 
-      - name: Build free tier
-        run: npm run build:free
+      # The curated subset must keep building — it is easy to break by adding a
+      # composition that depends on something outside core.
+      - name: Build the core subset
+        run: npm run build:core
