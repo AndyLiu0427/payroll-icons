@@ -12,6 +12,9 @@ release — the drawings are still settling. The component API will not.
 
 ### Added
 
+- `npm run confusability`, which rasterises every icon at 16px and scores each
+  pair on shared ink, separating pairs that are alike by design from marks that
+  genuinely collide.
 - A test suite. 35 tests covering the runtime's behaviour — size and stroke
   resolution, optical master selection, the filled variant and its fallback,
   the accessibility contract, mask-id uniqueness — and a snapshot of every
@@ -20,6 +23,11 @@ release — the drawings are still settling. The component API will not.
 
 ### Changed
 
+- `contract` redrawn at 16 units: one rule instead of two, and a larger
+  signature. It scored 84.9% similar to `invoice` at 16px, the closest
+  cross-base pair, and that similarity propagated to every composed mark built
+  on either. Now 75.6%, and the previous worst pair overall —
+  `credit-note` against `contract-signed` at 86.2% — is gone.
 - **Breaking (registry shape).** `tier: "free" | "pro"` on registry entries is
   now `set: "core" | "extended"`. The old name implied a paywall that does not
   exist — everything ships under one MIT licence. The new name describes what

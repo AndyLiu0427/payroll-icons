@@ -56,6 +56,24 @@ credit-note = invoice + minus
 That is why the set covers far more concepts than it contains drawings. Adding a modifier
 adds a row of new states across every base.
 
+### Keeping marks apart
+
+`npm run confusability` rasterises every icon at 16px — where the set is
+hardest to read — and scores each pair on shared ink. Median similarity across
+1,326 pairs is about 22%.
+
+Read the output carefully. Two marks built from the same base are *supposed* to
+be close: `deduction` and `bonus` are `coin + down` and `coin + plus`, and
+score in the 90s by design. Circle families start around 78% on their shared
+outline alone, before either draws anything inside. Only cross-base pairs — two
+different meanings landing on the same pixels — are a real signal, and those
+are reported separately.
+
+It measures ink distribution, not shape, so treat it as a place to look rather
+than a verdict. `contract` and `statement` score 81% because both are a sheet
+with one top rule and something in the lower half; a signature and a bar chart
+are not remotely confusable to a reader.
+
 ### Two rules the build enforces
 
 Both were found by drawing the set, and both fail CI rather than living in a style guide.
@@ -299,11 +317,16 @@ real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` sur
 | `npm run icons` | Validate masters and generate components, data and SVGs |
 | `npm run icons:core` | Same, curated core subset only |
 | `npm run figma` | Generate, then emit the Figma import bundle |
+| `npm run confusability` | Measure how alike any two marks look at 16px¹ |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
 | `npm test` | Vitest — runtime behaviour and the geometry snapshot |
 | `npm run typecheck` | `tsc --noEmit` across src, demo and scripts |
 | `npm run lint` | Biome |
+
+¹ Needs a browser to rasterise and is not part of the build, so playwright is
+not a dependency. Install it when you want to run the check:
+`npm i -D playwright && npx playwright install chromium`.
 
 ## Core and extended
 

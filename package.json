@@ -57,6 +57,7 @@
     "icons": "node scripts/build.mjs",
     "icons:core": "node scripts/build.mjs --set core",
     "figma": "npm run icons && node scripts/figma-export.mjs",
+    "confusability": "node scripts/confusability.mjs",
     "prebuild": "npm run icons",
     "build": "tsc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
     "smoke": "node scripts/smoke.mjs",
