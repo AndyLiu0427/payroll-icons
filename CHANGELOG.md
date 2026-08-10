@@ -23,6 +23,12 @@ release — the drawings are still settling. The component API will not.
 
 ### Changed
 
+- Toolchain brought current: TypeScript 7, Vite 8, Vitest 4, plugin-react 6,
+  and the GitHub Actions moved up a major each, with CI on Node 24. The
+  published output is unaffected — the emitted `.js` and `.d.ts` are byte for
+  byte what TypeScript 5.9 produced; only the source maps differ, since those
+  encode the compiler.
+
 - `contract` redrawn at 16 units: one rule instead of two, and a larger
   signature. It scored 84.9% similar to `invoice` at 16px, the closest
   cross-base pair, and that similarity propagated to every composed mark built

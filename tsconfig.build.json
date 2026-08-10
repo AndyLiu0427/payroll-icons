@@ -11,6 +11,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
+    // the published runtime touches no node API; keep its types out of the build
+    "types": [],
     "module": "nodenext",
     "moduleResolution": "nodenext"
   },
