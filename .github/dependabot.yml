@@ -1,0 +1,64 @@
+# Version ranges here are all `^`, which never crosses a major, so nothing
+# reaches a new major on its own. This is what notices.
+#
+# The grouping below is not cosmetic. It comes from what actually happened
+# upgrading this toolchain by hand:
+#
+#   - vite, vitest and @vitejs/plugin-react must move together. plugin-react 6
+#     requires vite ^8, so bumping them one at a time fails to resolve against
+#     the older vite still on disk. One PR, or none of them land.
+#   - typescript gets its own PR. It is the only dependency that compiles the
+#     published artifact, and the package deliberately relies on its
+#     `moduleResolution: nodenext` emit. That deserves reading, not merging.
+#
+# Nothing here auto-merges. Every PR runs CI — icon rules, typecheck, tests,
+# lint, build, and the smoke test that resolves the built package the way a
+# consumer will — so a bad bump shows up before review, not after.
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      # These three resolve against each other; splitting them breaks install.
+      vite-toolchain:
+        patterns:
+          - vite
+          - vitest
+          - "@vitejs/*"
+      react:
+        patterns:
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
+      types:
+        patterns:
+          - "@types/*"
+        exclude-patterns:
+          - "@types/react"
+          - "@types/react-dom"
+    ignore:
+      # Deliberately not a dependency — the confusability check needs a browser
+      # and is not part of the build, so it is installed on demand.
+      - dependency-name: playwright
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - "*"

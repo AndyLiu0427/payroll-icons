@@ -103,6 +103,33 @@ page is the only authority.
    npm view @octomate/payroll-icons dist-tags
    ```
 
+## Keeping the toolchain current
+
+Every version range in `package.json` is `^`, which never crosses a major, so
+nothing reaches a new major on its own. Dependabot opens weekly PRs against
+both npm and the GitHub Actions.
+
+Two groups exist for a reason rather than for tidiness:
+
+- **vite, vitest and `@vitejs/plugin-react` move together.** plugin-react 6
+  requires vite ^8, so bumping them one at a time fails to resolve against the
+  older vite still installed. They arrive as one PR.
+- **typescript arrives alone.** It is the only dependency that compiles the
+  published artifact, and the package relies on its `moduleResolution: nodenext`
+  emit — the thing that fixed the release blocker. Read that one.
+
+Nothing auto-merges. Every PR runs the full CI, so a bad bump fails before
+review rather than after.
+
+Checking by hand:
+
+```bash
+npm outdated
+```
+
+That compares against the range, so it will not show a new major. For the
+absolute latest, query the registry.
+
 ## What the pipeline checks
 
 `npm run smoke` runs in CI and again in `prepublishOnly`. It resolves the built
