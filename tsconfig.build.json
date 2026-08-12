@@ -2,8 +2,11 @@
   "extends": "./tsconfig.json",
   // nodenext makes the compiler enforce fully-specified relative imports, which is
   // what Node ESM and strict-ESM bundlers require of a "type": "module" package.
-  // Without it, tsc happily emits `from "./generated"` and the package fails to
-  // resolve for every consumer that is not a permissive bundler.
+  //
+  // The build runs through ngc, not tsc: signal input() needs the Angular compiler
+  // to register it on the component definition, and partial compilation is what lets
+  // a consuming app AOT-compile the component. Plain tsc emits a component whose
+  // bindings silently do nothing.
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
@@ -11,11 +14,14 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    // the published runtime touches no node API; keep its types out of the build
     "types": [],
     "module": "nodenext",
     "moduleResolution": "nodenext"
   },
   "include": ["src"],
-  "exclude": ["demo", "scripts", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["demo", "scripts", "**/*.test.ts", "**/*.test.tsx"],
+  "angularCompilerOptions": {
+    "compilationMode": "partial",
+    "strictTemplates": true
+  }
 }

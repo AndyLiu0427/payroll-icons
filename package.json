@@ -13,7 +13,7 @@
     "fintech"
   ],
   "license": "MIT",
-  "author": "Octomate",
+  "author": "YingYen Liu",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AndyLiu0427/payroll-icons.git"
@@ -41,6 +41,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./angular": {
+      "types": "./dist/generated/angular.d.ts",
+      "default": "./dist/generated/angular.js"
+    },
     "./registry": {
       "types": "./dist/generated/registry.d.ts",
       "default": "./dist/generated/registry.js"
@@ -59,11 +63,11 @@
     "figma": "npm run icons && node scripts/figma-export.mjs",
     "confusability": "node scripts/confusability.mjs",
     "prebuild": "npm run icons",
-    "build": "tsc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
+    "build": "ngc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
     "smoke": "node scripts/smoke.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build:core": "npm run icons:core && tsc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
+    "build:core": "npm run icons:core && ngc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
     "dev": "npm run icons && vite --config vite.config.demo.ts",
     "demo:build": "npm run icons && vite build --config vite.config.demo.ts",
     "typecheck": "tsc --noEmit",
@@ -72,14 +76,22 @@
     "prepublishOnly": "npm run build && npm test && npm run smoke"
   },
   "peerDependencies": {
+    "@angular/core": ">=18",
     "react": ">=18"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
+    },
+    "@angular/core": {
+      "optional": true
     }
   },
   "devDependencies": {
+    "@angular/common": "^21.2.19",
+    "@angular/compiler": "^21.2.19",
+    "@angular/compiler-cli": "^21.2.19",
+    "@angular/core": "^21.2.19",
     "@biomejs/biome": "^2.0.0",
     "@types/node": "^26.2.0",
     "@types/react": "^19.0.0",
@@ -88,9 +100,10 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "svgo": "^4.0.0",
-    "typescript": "^7.0.2",
+    "typescript": "5.9",
     "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "zone.js": "^0.16.2"
   },
   "publishConfig": {
     "access": "public"

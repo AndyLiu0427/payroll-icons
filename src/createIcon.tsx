@@ -1,5 +1,6 @@
 import type { CSSProperties, ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { createElement, forwardRef, useId } from "react";
+import { GRID, type IconDefinition, type IconMasters, OPTICAL_BREAKPOINT } from "./types.js";
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "ref"> {
   /** Rendered width and height in px. Defaults to 24. */
@@ -28,48 +29,8 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "ref"> {
 
 export type IconComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
-/**
- * Grid constants per optical size — must stay in sync with icons/manifest.json
- * and scripts/build.mjs.
- *
- * The small master is drawn on its own 16-unit grid rather than scaled from 24.
- * Below roughly 20px the modifier ring fills in and detail lines closer than
- * about 2.5 units fuse, so the small master carries fewer paths, larger
- * features, and badges with no ring at all.
- */
-export const GRID = {
-  lg: { canvas: 24, knockoutCentre: 17.5, knockoutRadius: 5.5, strokeWidth: 1.5 },
-  sm: { canvas: 16, knockoutCentre: 11.6, knockoutRadius: 3.9, strokeWidth: 1.25 },
-} as const;
-
-/** At or below this rendered size the 16px master wins, when one exists. */
-export const OPTICAL_BREAKPOINT = 18;
-
-export interface IconGeometry {
-  base: readonly string[];
-  modifier?: readonly string[];
-  /**
-   * Enables `variant="filled"`. `container` indexes the closed outer path that
-   * becomes the solid body; `knockout` indexes the detail paths cut out of it,
-   * so the mark stays legible on any background without a second colour.
-   *
-   * Only marks whose outer path encloses every detail can be derived this way.
-   * A calendar's tabs sit above its box and a person's shoulders outside their
-   * head, so those need drawn filled artwork instead and have no `fill` here.
-   */
-  fill?: { container: number; knockout: readonly number[] };
-  /**
-   * A drawn filled master — solid areas with counters as even-odd subpaths.
-   * Supersedes `fill` for marks the derivation cannot reach: anything whose
-   * outer path does not enclose its details, or has no outer path at all.
-   */
-  solid?: readonly string[];
-}
-
-export interface IconMasters {
-  lg: IconGeometry;
-  sm?: IconGeometry;
-}
+export type { IconDefinition, IconGeometry, IconMasters, OpticalSize } from "./types.js";
+export { GRID, OPTICAL_BREAKPOINT } from "./types.js";
 
 const SVG_DEFAULTS = {
   xmlns: "http://www.w3.org/2000/svg",
@@ -87,7 +48,8 @@ const SVG_DEFAULTS = {
  * hole. That knockout is what keeps a badge legible without a colour change,
  * so it is applied here rather than baked into the path data.
  */
-export function createIcon(name: string, masters: IconMasters): IconComponent {
+export function createIcon(definition: IconDefinition): IconComponent {
+  const { name, ...masters }: { name: string } & IconMasters = definition;
   const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(props, ref) {
     const {
       size = 24,

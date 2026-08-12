@@ -271,6 +271,7 @@ if (errors.length) {
 
 rmSync(GEN, { recursive: true, force: true });
 mkdirSync(join(GEN, "react"), { recursive: true });
+mkdirSync(join(GEN, "defs"), { recursive: true });
 mkdirSync(DIST_SVG, { recursive: true });
 
 const pascal = (s) => s.replace(/(^|[-_])(\w)/g, (_, __, c) => c.toUpperCase());
@@ -469,17 +470,32 @@ for (const icon of icons) {
   const names = [...r.lgNames, ...(r.smNames ?? [])];
   const sm = r.sm ? `,\n  sm: ${r.sm}` : "";
 
+  const doc = `/** ${icon.zh} — ${r.note}${
+    r.smPaths ? " · 24px and 16px optical masters" : " · 24px master only"
+  } */`;
+
+  /* The geometry, framework-neutral. Both runtimes consume this exact object,
+     so a mark cannot drift between React and Angular. */
+  writeFileSync(
+    join(GEN, "defs", `${Comp}.ts`),
+    `${HEADER}import type { IconDefinition } from "../../types.js";
+import { ${names.join(", ")} } from "../paths.js";
+
+${doc}
+export const ${Comp}: IconDefinition = {
+  name: "${Comp}",
+  lg: ${r.lg}${sm},
+};
+`,
+  );
+
   writeFileSync(
     join(GEN, "react", `${Comp}.ts`),
     `${HEADER}import { createIcon } from "../../createIcon.js";
-import { ${names.join(", ")} } from "../paths.js";
+import { ${Comp} as definition } from "../defs/${Comp}.js";
 
-/** ${icon.zh} — ${r.note}${
-      r.smPaths ? " · 24px and 16px optical masters" : " · 24px master only"
-    } */
-export const ${Comp} = createIcon("${Comp}", {
-  lg: ${r.lg}${sm},
-});
+${doc}
+export const ${Comp} = createIcon(definition);
 export default ${Comp};
 `,
   );
@@ -561,6 +577,17 @@ ${icons
 export const currencies = registry.filter((i) => i.symbol != null);
 
 export const groups = ${JSON.stringify([...new Set(icons.map((i) => i.group))])} as const;
+`,
+);
+
+/* the Angular entry point re-exports the component and every definition */
+writeFileSync(
+  join(GEN, "angular.ts"),
+  `${HEADER}export { PayrollIconComponent } from "../angular/payroll-icon.js";
+export { GRID, OPTICAL_BREAKPOINT } from "../types.js";
+export type { IconDefinition, IconGeometry, IconMasters, OpticalSize } from "../types.js";
+
+${icons.map((i) => `export { ${pascal(i.name)} } from "./defs/${pascal(i.name)}.js";`).join("\n")}
 `,
 );
 

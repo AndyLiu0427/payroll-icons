@@ -38,8 +38,8 @@ describe("size and stroke", () => {
 });
 
 describe("optical master selection", () => {
-  const Dual = createIcon("Dual", { lg: LG, sm: SM });
-  const LgOnly = createIcon("LgOnly", { lg: LG });
+  const Dual = createIcon({ name: "Dual", lg: LG, sm: SM });
+  const LgOnly = createIcon({ name: "LgOnly", lg: LG });
 
   it("uses the small master at and below the breakpoint", () => {
     expect(render(<Dual size={OPTICAL_BREAKPOINT} />)).toContain('viewBox="0 0 16 16"');
@@ -73,7 +73,7 @@ describe("filled variant", () => {
   });
 
   it("falls back to the outline on a mark with no filled form", () => {
-    const NoFill = createIcon("NoFill", { lg: { base: ["M2 2h20"] } });
+    const NoFill = createIcon({ name: "NoFill", lg: { base: ["M2 2h20"] } });
     expect(render(<NoFill variant="filled" />)).not.toContain('data-variant="filled"');
   });
 

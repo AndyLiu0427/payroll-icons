@@ -263,7 +263,46 @@ library without per-icon tuning. Tunable per instance:
 
 `prefers-reduced-motion: reduce` disables it. `.pi-hover` adds a restrained hover scale.
 
-## Outside React
+## Angular
+
+```bash
+npm install @octomate/payroll-icons
+```
+
+```ts
+import { PayrollIconComponent, Payslip, Deduction } from "@octomate/payroll-icons/angular";
+
+@Component({ imports: [PayrollIconComponent], template: `
+  <pi-icon [icon]="Payslip" />
+  <pi-icon [icon]="Deduction" [size]="16" />
+  <pi-icon [icon]="Payslip" variant="filled" ariaLabel="Payslip" />
+` })
+class Example {
+  protected readonly Payslip = Payslip;
+  protected readonly Deduction = Deduction;
+}
+```
+
+The component takes the icon *object*, not a name — the same shape
+lucide-angular uses — so a template pulls in only the marks it names and the
+rest tree-shake away. A name-keyed registry would import all 54.
+
+Inputs mirror the React props: `size`, `strokeWidth`, `absoluteStrokeWidth`,
+`optical`, `variant`, plus `ariaLabel` in place of the `aria-*` attributes.
+Both runtimes consume the same `IconDefinition` objects, so a mark cannot drift
+between them.
+
+Two things worth knowing:
+
+- The library is compiled with `ngc` in partial mode, not plain `tsc`. Signal
+  `input()` needs the Angular compiler to register it on the component
+  definition; a plain-tsc build produces a component whose bindings silently do
+  nothing and whose inputs land as stray HTML attributes.
+- That constrains TypeScript. Angular's compiler-cli pins `typescript` below
+  6.1, so the library tracks the TypeScript the Angular toolchain supports
+  rather than the newest release.
+
+## Outside React or Angular
 
 The package is React-first but the geometry is not.
 

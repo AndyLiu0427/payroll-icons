@@ -12,6 +12,11 @@ release — the drawings are still settling. The component API will not.
 
 ### Added
 
+- **An Angular entry point.** `@octomate/payroll-icons/angular` exports a
+  `PayrollIconComponent` and every icon as an `IconDefinition`. The geometry
+  moved into a framework-free core that both runtimes consume, so a mark cannot
+  drift between React and Angular.
+
 - `npm run confusability`, which rasterises every icon at 16px and scores each
   pair on shared ink, separating pairs that are alike by design from marks that
   genuinely collide.
@@ -23,7 +28,11 @@ release — the drawings are still settling. The component API will not.
 
 ### Changed
 
-- Toolchain brought current: TypeScript 7, Vite 8, Vitest 4, plugin-react 6,
+- TypeScript held at 5.9. Angular's compiler-cli pins `typescript` below 6.1,
+  so shipping an Angular entry point means tracking the TypeScript the Angular
+  toolchain supports. Nothing is lost: TypeScript 7 emitted byte-identical
+  `.js` and `.d.ts`.
+- Toolchain brought current: Vite 8, Vitest 4, plugin-react 6, Vite 8, Vitest 4, plugin-react 6,
   and the GitHub Actions moved up a major each, with CI on Node 24. The
   published output is unaffected — the emitted `.js` and `.d.ts` are byte for
   byte what TypeScript 5.9 produced; only the source maps differ, since those
