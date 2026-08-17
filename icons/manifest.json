@@ -141,7 +141,21 @@
       "note": "right child node sits in the modifier zone"
     },
 
-    "pay-run": { "zh": "薪資批次", "group": "process", "composable": true, "set": "core" }
+    "pay-run": { "zh": "薪資批次", "group": "process", "composable": true, "set": "core" },
+
+    "client": {
+      "zh": "客戶公司",
+      "group": "staffing",
+      "composable": false,
+      "set": "core",
+      "note": "the lower wing sits in the modifier zone"
+    },
+    "assignment": {
+      "zh": "派遣 / 指派",
+      "group": "staffing",
+      "composable": true,
+      "set": "core"
+    }
   },
 
   "modifiers": {
@@ -211,6 +225,29 @@
     },
     { "name": "deduction", "base": "coin", "modifier": "down", "zh": "扣除額", "set": "core" },
     { "name": "allowance", "base": "coin", "modifier": "up", "zh": "津貼 / 加給", "set": "core" },
+
+    {
+      "name": "job-order",
+      "base": "assignment",
+      "modifier": "pending",
+      "zh": "職缺需求單",
+      "set": "core",
+      "note": "a job order is a placement not yet filled — composition, not its own base"
+    },
+    {
+      "name": "assignment-approved",
+      "base": "assignment",
+      "modifier": "approved",
+      "zh": "指派已確認",
+      "set": "core"
+    },
+    {
+      "name": "assignment-exception",
+      "base": "assignment",
+      "modifier": "exception",
+      "zh": "指派異常",
+      "set": "core"
+    },
 
     {
       "name": "pay-run-recurring",
