@@ -4,5 +4,5 @@
   <path pathLength="1" d="M8 2v4"/>
   <path pathLength="1" d="M16 2v4"/>
   <path pathLength="1" d="M8 15.5a4 4 0 1 0 8 0 4 4 0 1 0-8 0z"/>
-  <path pathLength="1" d="M12 13.3v2.2l1.6 1"/>
+  <path pathLength="1" d="M12 13.9v1.6l1.6 1"/>
 </svg>

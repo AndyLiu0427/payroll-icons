@@ -1,0 +1,276 @@
+{
+  "$comment": "Which mark stands for which idea. One concept resolves to exactly one icon, so the same thing looks the same in every screen that shows it. Search terms live in `also`; a term may appear once across the whole file, since a word that points at two marks helps nobody. `approximate: true` marks a concept borrowing the nearest mark rather than owning one — those are the drawing backlog, and `npm run icons` prints the count.",
+
+  "concepts": {
+    "payslip": {
+      "icon": "payslip",
+      "zh": "薪資單",
+      "also": ["pay statement", "salary slip", "工資單", "糧單"]
+    },
+    "payslip-draft": {
+      "icon": "payslip-pending",
+      "zh": "薪資單草稿",
+      "approximate": true,
+      "also": ["draft payslip"]
+    },
+    "payslip-released": {
+      "icon": "payslip-approved",
+      "zh": "薪資單已發放",
+      "also": ["release payslips", "published payslip"]
+    },
+
+    "payroll-run": {
+      "icon": "pay-run",
+      "zh": "薪資批次",
+      "also": ["payrun", "pay cycle", "run payroll", "跑薪"]
+    },
+    "payroll-run-recurring": {
+      "icon": "pay-run-recurring",
+      "zh": "定期薪資批次",
+      "also": ["scheduled payroll"]
+    },
+    "off-cycle-run": {
+      "icon": "pay-run",
+      "zh": "臨時批次",
+      "approximate": true,
+      "also": ["ad hoc payroll", "supplementary run"]
+    },
+    "pay-period": {
+      "icon": "calendar",
+      "zh": "薪資期間",
+      "also": ["pay cycle dates", "period", "計薪期"]
+    },
+    "period-closed": {
+      "icon": "period-closed",
+      "zh": "期間已關帳",
+      "also": ["close period", "locked period", "關帳"]
+    },
+    "pay-item": {
+      "icon": "coin",
+      "zh": "薪資項目",
+      "also": ["pay component", "earning", "薪資科目"]
+    },
+    "deduction": { "icon": "deduction", "zh": "扣除額", "also": ["deductions", "扣款"] },
+    "allowance": { "icon": "allowance", "zh": "津貼 / 加給", "also": ["allowances", "加給"] },
+    "bonus": { "icon": "bonus", "zh": "獎金", "also": ["incentive", "13th month", "花紅"] },
+    "reimbursement": {
+      "icon": "reimbursement",
+      "zh": "費用核銷",
+      "also": ["expense claim", "claim", "報銷"]
+    },
+
+    "bank-file": {
+      "icon": "disbursement",
+      "zh": "銀行檔案",
+      "approximate": true,
+      "also": ["giro file", "payment file", "bank giro", "撥款檔"]
+    },
+    "disbursement": {
+      "icon": "disbursement",
+      "zh": "撥款 / 匯出",
+      "also": ["payout", "remittance"]
+    },
+    "deposit": { "icon": "deposit", "zh": "入帳 / 收款", "also": ["incoming payment", "收款"] },
+    "bank-account": { "icon": "bank", "zh": "銀行帳戶", "also": ["account details", "銀行資料"] },
+
+    "client": { "icon": "client", "zh": "客戶公司", "also": ["customer company", "hirer", "客戶"] },
+    "client-department": {
+      "icon": "org-chart",
+      "zh": "客戶部門",
+      "approximate": true,
+      "also": ["client dept", "cost centre", "成本中心", "部門"]
+    },
+    "consultant": {
+      "icon": "employee",
+      "zh": "派遣顧問",
+      "also": ["contractor", "placed worker", "顧問", "員工"]
+    },
+    "headcount": { "icon": "team", "zh": "人數", "also": ["team size", "workforce", "團隊"] },
+    "assignment": {
+      "icon": "assignment",
+      "zh": "派遣指派",
+      "also": ["placement", "engagement", "派工"]
+    },
+    "assignment-confirmed": {
+      "icon": "assignment-approved",
+      "zh": "指派已確認",
+      "also": ["placement confirmed"]
+    },
+    "assignment-issue": {
+      "icon": "assignment-exception",
+      "zh": "指派異常",
+      "also": ["placement dispute"]
+    },
+    "job-order": {
+      "icon": "job-order",
+      "zh": "職缺需求單",
+      "also": ["requisition", "open role", "vacancy", "職缺"]
+    },
+    "contract": { "icon": "contract", "zh": "合約", "also": ["agreement", "合同"] },
+    "contract-signed": {
+      "icon": "contract-signed",
+      "zh": "合約已簽署",
+      "also": ["executed contract", "已簽"]
+    },
+    "contract-period": {
+      "icon": "calendar",
+      "zh": "合約期間",
+      "approximate": true,
+      "also": ["assignment period", "term dates", "約期"]
+    },
+    "onboarding": { "icon": "onboarding", "zh": "到職", "also": ["start date", "joiner", "入職"] },
+    "offboarding": {
+      "icon": "offboarding",
+      "zh": "離職",
+      "also": ["leaver", "termination", "離退"]
+    },
+
+    "timesheet": {
+      "icon": "timesheet",
+      "zh": "出勤工時",
+      "also": ["time entry", "attendance", "工時表", "考勤"]
+    },
+    "timesheet-issue": {
+      "icon": "timesheet-exception",
+      "zh": "工時異常",
+      "also": ["timesheet dispute"]
+    },
+    "hours": { "icon": "clock", "zh": "時數", "also": ["worked hours", "duration", "工時"] },
+    "overtime": { "icon": "overtime", "zh": "加班", "also": ["OT", "加班費"] },
+    "shift": { "icon": "shift", "zh": "排班", "also": ["roster", "班表"] },
+    "leave": {
+      "icon": "leave",
+      "zh": "請假",
+      "also": ["annual leave", "PTO", "time off", "年假", "休假"]
+    },
+    "public-holiday": {
+      "icon": "calendar",
+      "zh": "國定假日",
+      "approximate": true,
+      "also": ["holiday calendar", "假日"]
+    },
+
+    "billing-run": {
+      "icon": "invoice",
+      "zh": "請款批次",
+      "approximate": true,
+      "also": ["run billing", "invoice batch", "請款"]
+    },
+    "billing-rate": {
+      "icon": "coin",
+      "zh": "計費費率",
+      "approximate": true,
+      "also": ["charge rate", "bill rate", "費率"]
+    },
+    "invoice": { "icon": "invoice", "zh": "發票 / 請款單", "also": ["bill", "請款單"] },
+    "invoice-issue": { "icon": "invoice-exception", "zh": "請款異常", "also": ["billing error"] },
+    "credit-note": { "icon": "credit-note", "zh": "折讓單", "also": ["credit memo", "折讓"] },
+    "receipt": { "icon": "receipt", "zh": "收據", "also": ["proof of payment", "收條"] },
+    "statement": { "icon": "statement", "zh": "對帳單", "also": ["account statement", "月結單"] },
+    "margin": {
+      "icon": "balance",
+      "zh": "毛利 / 價差",
+      "approximate": true,
+      "also": ["gross margin", "spread", "margin report", "毛利率"]
+    },
+    "ledger": { "icon": "ledger", "zh": "總帳 / 帳冊", "also": ["general ledger", "GL", "分類帳"] },
+    "ledger-locked": { "icon": "ledger-locked", "zh": "總帳鎖定", "also": ["closed books"] },
+    "subscription": {
+      "icon": "subscription",
+      "zh": "訂閱制帳單",
+      "also": ["recurring billing", "訂閱"]
+    },
+    "reconciliation": {
+      "icon": "balance",
+      "zh": "對帳",
+      "also": ["reconcile", "balancing", "核對"]
+    },
+    "exchange-rate": { "icon": "exchange", "zh": "匯率", "also": ["FX", "multi-currency", "換匯"] },
+    "amount": { "icon": "coin", "zh": "金額", "also": ["value", "money", "金額欄"] },
+    "cash": { "icon": "banknote", "zh": "現金", "also": ["banknote", "現鈔"] },
+
+    "statutory-contribution": {
+      "icon": "shield",
+      "zh": "法定提撥",
+      "also": ["statutory", "mandatory contribution", "法定"]
+    },
+    "pension-contribution": {
+      "icon": "pension-contribution",
+      "zh": "退休金提撥",
+      "also": ["retirement fund", "退休提撥"]
+    },
+    "tax-form": { "icon": "tax-form", "zh": "稅務表單", "also": ["withholding form", "扣繳憑單"] },
+    "tax-filed": {
+      "icon": "tax-filed",
+      "zh": "報稅完成",
+      "also": ["submitted to authority", "已申報"]
+    },
+
+    "mpf": {
+      "icon": "pension-contribution",
+      "zh": "強積金",
+      "region": "HK",
+      "also": ["mandatory provident fund", "強制性公積金"]
+    },
+    "ir56": {
+      "icon": "tax-form",
+      "zh": "IR56 僱主報稅表",
+      "region": "HK",
+      "also": ["ir56b", "ir56e", "ir56f", "ir56g", "employer return"]
+    },
+
+    "cpf": {
+      "icon": "pension-contribution",
+      "zh": "公積金",
+      "region": "SG",
+      "also": ["central provident fund", "中央公積金"]
+    },
+    "sdl": {
+      "icon": "shield",
+      "zh": "技能發展徵費",
+      "region": "SG",
+      "approximate": true,
+      "also": ["skills development levy", "徵費"]
+    },
+    "fwl": {
+      "icon": "shield",
+      "zh": "外勞徵費",
+      "region": "SG",
+      "approximate": true,
+      "also": ["foreign worker levy", "外勞稅"]
+    },
+    "ir8a": {
+      "icon": "tax-form",
+      "zh": "IR8A 年度所得",
+      "region": "SG",
+      "also": ["annual income report", "AIS", "auto-inclusion"]
+    },
+
+    "epf": {
+      "icon": "pension-contribution",
+      "zh": "僱員公積金",
+      "region": "MY",
+      "also": ["employees provident fund", "KWSP"]
+    },
+    "socso": {
+      "icon": "shield",
+      "zh": "社會保險",
+      "region": "MY",
+      "approximate": true,
+      "also": ["PERKESO", "social security", "社險"]
+    },
+    "eis": {
+      "icon": "shield",
+      "zh": "就業保險",
+      "region": "MY",
+      "approximate": true,
+      "also": ["employment insurance scheme", "SIP"]
+    },
+    "pcb": {
+      "icon": "tax-form",
+      "zh": "月度預扣稅",
+      "region": "MY",
+      "also": ["monthly tax deduction", "MTD", "PCB"]
+    }
+  }
+}

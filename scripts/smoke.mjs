@@ -91,6 +91,7 @@ const entries = [
   ["main", ".", ["createIcon", "toSvgString", "GRID", "OPTICAL_BREAKPOINT"]],
   ["registry", "./registry", ["registry", "currencies"]],
   ["paths", "./paths", ["coinPaths"]],
+  ["concepts", "./concepts", ["concepts", "iconFor", "approximated"]],
 ];
 
 for (const [label, subpath, expected] of entries) {

@@ -356,6 +356,18 @@ button[aria-pressed="true"] {
   letter-spacing: 0.04em;
 }
 
+/* the words a product would actually use for this mark; * marks a concept
+   borrowing it rather than owning a mark of its own */
+.cell__concepts {
+  font-size: 9px;
+  color: var(--muted);
+  opacity: 0.75;
+  line-height: 1.45;
+  margin-top: 2px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 .cell__nofill {
   position: absolute;
   top: 6px;

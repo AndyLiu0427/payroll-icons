@@ -3,6 +3,6 @@
   <path pathLength="1" d="M2 6h12"/>
   <path pathLength="1" d="M5.5 1v3"/>
   <path pathLength="1" d="M10.5 1v3"/>
-  <path pathLength="1" d="M5.5 10.2a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0z"/>
-  <path pathLength="1" d="M8 8.8v1.4l1 .6"/>
+  <path pathLength="1" d="M5.9 10a2.1 2.1 0 1 0 4.2 0 2.1 2.1 0 1 0-4.2 0z"/>
+  <path pathLength="1" d="M8 8.6v1.4l.9 .55"/>
 </svg>

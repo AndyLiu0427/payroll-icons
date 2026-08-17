@@ -1,7 +1,7 @@
 # Payroll Icon System
 
-**54 icons** for payroll, time and attendance, statutory contributions, billing and
-payments — each in two optical sizes and two weights.
+**59 icons** for payroll, time and attendance, statutory contributions, staffing,
+billing and payments — each in two optical sizes and two weights.
 
 Generic icon sets give you one `file-text` for a payslip, an invoice, a receipt and a
 withholding certificate. This set forces them apart, and expresses state through a fixed
@@ -325,20 +325,49 @@ Adding a Vue, Svelte or Angular target is one emitter in
 [`scripts/build.mjs`](scripts/build.mjs) — the validation, optimisation and composition
 stages are already framework-neutral.
 
+## Which mark means what
+
+Picking an icon per screen is how a set drifts: one page shows a job order with a
+clipboard, another with a briefcase, and both authors were being reasonable. The concept
+table makes that decision once.
+
+```ts
+import { concepts, iconFor, approximated } from "@octomate/payroll-icons/concepts";
+
+iconFor("job order");   // "job-order"
+iconFor("requisition"); // "job-order"  — same idea, same mark
+iconFor("強積金");       // "pension-contribution"
+iconFor("PTO");         // "leave"
+```
+
+A term can be the concept's name, its Chinese label, or any listed synonym, and case and
+separators are ignored. The build fails if a concept points at a mark that does not exist,
+or if one term is claimed by two concepts — a word that resolves to two marks sends whoever
+typed it straight back to guessing.
+
+It is plain data with no component imports, so a lookup pulls no icons into a bundle.
+
+`approximated` lists concepts still borrowing the nearest mark rather than owning one.
+That is the drawing backlog, stated as data instead of as a paragraph someone has to
+remember to update, and `npm run icons` prints the count on every build.
+
 ## Repository layout
 
 ```
 icons/
-  bases/*.svg        21 authored 24-unit masters — the source of truth
-  bases-16/*.svg     21 authored 16-unit masters
+  bases/*.svg        23 authored 24-unit masters — the source of truth
+  bases-16/*.svg     23 authored 16-unit masters
   modifiers/*.svg     9 authored 24-unit masters
   modifiers-16/*.svg  9 authored 16-unit masters
-  bases-filled/*.svg      11 drawn solid masters, for shapes the fill cannot derive
-  bases-filled-16/*.svg   11 of those at 16 units
+  bases-filled/*.svg      13 drawn solid masters, for shapes the fill cannot derive
+  bases-filled-16/*.svg   13 of those at 16 units
   currency/*.svg      9 currency coins — complete icons, ring plus glyph
   currency-16/*.svg   7 of those at 16 units; two-letter marks are 24 only
   manifest.json      what each mark means, how it may be used, which set
+  concepts.json      which idea resolves to which mark, and by what search terms
 scripts/build.mjs    validate → optimise → compose → emit
+scripts/gaps.mjs     path sampler behind the minimum-gap guard
+scripts/shapes.mjs   recurring-shape audit (npm run shapes)
 src/
   createIcon.tsx     the runtime (masking, sizing, a11y)
   animate.css        optional motion layer
@@ -365,6 +394,46 @@ sign of a degenerate path, such as a dot drawn as a zero-length capped segment. 
 real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` survives on the
 24 grid and vanishes on the 16 grid.
 
+It also rejects strokes that come within **0.4 units** of each other without meeting. Two
+lines a fraction of a unit apart do not read as two lines — the white between them fills in
+and the pair reads as one thick smudge, at exactly the sizes these icons are used. Shapes
+that touch outright are fine and common: a building's wing meets its wall, a calendar's tab
+meets its box. Only a gap too small to see is a defect, so the fix is always to separate the
+strokes further or to join them properly.
+
+The number comes from the badge geometry rather than from taste: a glyph inside the
+4.25-unit modifier disc cannot clear more than about 0.45 units, so anything tighter is a
+slip rather than a constraint the grid imposed.
+
+Gaps are measured **edge to edge**, which is why the 16-unit master needs more room than a
+scaled-down 24 looks like it should. Its stroke is 1.25 of 16 units — 7.8% of the canvas —
+against 1.5 of 24, or 6.25%. The small master's line is a quarter heavier relative to its
+own grid, so its gaps have to be drawn wider, not scaled down.
+
+### The shape canon
+
+Shapes that recur across the set are drawn to one value, so a document corner is the same
+corner everywhere:
+
+| Role | 24-grid | 16-grid |
+| --- | --- | --- |
+| Large circle — a coin's rim, a clock face, a circular arrow | 8.2 | 5.5 |
+| Container corner — the rounded rectangle that forms a mark's body | 2.5 | 1.5 |
+| Small element corner — an org-chart node, a case handle, a building top | 1.5 | 1.0 |
+
+Nobody notices this directly. What gets noticed is the absence: a set where the same object
+is drawn three slightly different ways reads as handmade, and not in a good way. Twelve marks
+used to carry three different large-circle radii — 8.2, 8.4 and 8.5 — for what the eye reads
+as one circle.
+
+Deliberate exceptions are fine and exist: `ledger` gives its page edge a squarer corner than
+its spine, because a book is not a document. The canon is there so that divergence is a
+decision rather than a drift.
+
+`npm run shapes` prints every radius in use, grouped by the job it does, and marks the ones
+that match the canon. Run it after drawing a new master — it takes a second and it is the
+only thing that catches a corner landing at 2.0 because that is what the editor snapped to.
+
 ## Scripts
 
 | Command | Does |
@@ -373,6 +442,7 @@ real circles; the optimiser's idea of "useless" is scale-relative, so `v.01` sur
 | `npm run icons:core` | Same, curated core subset only |
 | `npm run figma` | Generate, then emit the Figma import bundle |
 | `npm run confusability` | Measure how alike any two marks look at 16px¹ |
+| `npm run shapes` | Audit recurring shapes against the canon |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
 | `npm test` | Vitest — runtime behaviour and the geometry snapshot |
@@ -392,8 +462,8 @@ here, so anyone can compose the rest in a few minutes.
 
 `set` in the manifest curates rather than gates:
 
-- **core** (26) — the marks nearly every payroll product needs: all 21 bases,
-  plus the five states that come up immediately.
+- **core** (31) — the marks nearly every payroll product needs: all 23 bases,
+  plus the states that come up immediately.
 - **extended** (28) — the long tail. Currency coins, and the composed states a
   product reaches for once the basics are in place.
 

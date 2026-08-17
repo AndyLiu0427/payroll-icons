@@ -1,6 +1,6 @@
 {
   "name": "@octomate/payroll-icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Payroll, time, statutory and billing icons built from a base × modifier system. 24×24, stroke, currentColor, animation-ready.",
   "keywords": [
     "icons",
@@ -49,6 +49,10 @@
       "types": "./dist/generated/registry.d.ts",
       "default": "./dist/generated/registry.js"
     },
+    "./concepts": {
+      "types": "./dist/generated/concepts.d.ts",
+      "default": "./dist/generated/concepts.js"
+    },
     "./paths": {
       "types": "./dist/generated/paths.d.ts",
       "default": "./dist/generated/paths.js"
@@ -62,6 +66,7 @@
     "icons:core": "node scripts/build.mjs --set core",
     "figma": "npm run icons && node scripts/figma-export.mjs",
     "confusability": "node scripts/confusability.mjs",
+    "shapes": "node scripts/shapes.mjs",
     "prebuild": "npm run icons",
     "build": "ngc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
     "smoke": "node scripts/smoke.mjs",

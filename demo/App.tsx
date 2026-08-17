@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import pkg from "../package.json";
+import { type Concept, concepts } from "../src/generated/concepts";
 import type { IconMeta } from "../src/generated/registry";
 import { registry } from "../src/generated/registry";
 
@@ -10,8 +11,39 @@ const GROUP_LABELS: Record<string, string> = {
   statutory: "法定 Statutory",
   organisation: "組織 Organisation",
   process: "流程 Process",
+  staffing: "派遣 Staffing",
   currency: "幣別 Currency",
 };
+
+/** Matches the library's own lookup: case and separators carry no meaning. */
+const norm = (s: string) =>
+  s
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
+
+/**
+ * Which concepts point at each mark.
+ *
+ * The registry answers "what is this icon", the concept table answers "what do
+ * we call it" — several names to one mark. Searching without it means anyone
+ * typing the word their product actually uses, like PTO or MPF, finds nothing.
+ */
+const CONCEPTS_BY_ICON = Object.entries(concepts).reduce<
+  Record<string, { name: string; concept: Concept }[]>
+>((acc, [name, concept]) => {
+  const list = acc[concept.icon] ?? [];
+  list.push({ name, concept });
+  acc[concept.icon] = list;
+  return acc;
+}, {});
+
+const conceptTerms = (iconName: string) =>
+  (CONCEPTS_BY_ICON[iconName] ?? []).flatMap(({ name, concept }) => [
+    name,
+    concept.zh,
+    ...(concept.also ?? []),
+  ]);
 
 const SIZES = [16, 20, 24, 32] as const;
 const STROKES = ["auto", 1.25, 1.5, 2] as const;
@@ -34,6 +66,7 @@ export default function App() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const nq = norm(query);
     return registry.filter((i) => {
       if (set !== "all" && i.set !== set) return false;
       if (!q) return true;
@@ -42,7 +75,8 @@ export default function App() {
         i.zh.includes(query.trim()) ||
         (i.base?.includes(q) ?? false) ||
         (i.modifier?.includes(q) ?? false) ||
-        (i.covers?.some((c) => c.toLowerCase().includes(q)) ?? false)
+        (i.covers?.some((c) => c.toLowerCase().includes(q)) ?? false) ||
+        conceptTerms(i.name).some((t) => norm(t).includes(nq))
       );
     });
   }, [query, set]);
@@ -190,8 +224,9 @@ export default function App() {
 
       {grouped.length === 0 && (
         <p className="empty">
-          Nothing matches “{query}”. Try an English name, a Chinese term, or a modifier like{" "}
-          <code>recurring</code>.
+          Nothing matches “{query}”. Search takes an English name, a Chinese term, a modifier like{" "}
+          <code>recurring</code>, or the word your product actually uses — <code>PTO</code>,{" "}
+          <code>MPF</code>, <code>requisition</code>, <code>職缺</code>.
         </p>
       )}
 
@@ -204,6 +239,10 @@ export default function App() {
           <div className="grid">
             {icons.map((icon) => {
               const Icon = icon.Component;
+              // an asterisk marks a concept borrowing this mark rather than owning one
+              const conceptLabel = (CONCEPTS_BY_ICON[icon.name] ?? [])
+                .map(({ name, concept }) => (concept.approximate ? `${name}*` : name))
+                .join(" · ");
               return (
                 <button
                   key={icon.name}
@@ -231,6 +270,7 @@ export default function App() {
                   {icon.covers && (
                     <span className="cell__covers">{icon.covers.slice(0, 4).join(" · ")}</span>
                   )}
+                  {conceptLabel && <span className="cell__concepts">{conceptLabel}</span>}
                   {filled && !icon.hasFilled && <span className="cell__nofill">outline only</span>}
                   {icon.set === "extended" && <span className="cell__tier">ext</span>}
                   {copied === icon.name && <span className="cell__copied">Copied import</span>}

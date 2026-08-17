@@ -3,7 +3,7 @@
 The set is measured and tested, but nothing here has been in front of a user.
 This is what to watch for, ordered by how likely it is to be wrong.
 
-The version is 0.1.0 deliberately. **While the major is 0, a mark's drawing can
+The version is still 0.x deliberately. **While the major is 0, a mark's drawing can
 change without it being a breaking release** — so this is the window in which
 feedback is cheap to act on. The component API is a different matter and follows
 semver from the start.
@@ -44,7 +44,7 @@ Same shape of problem, one step milder: `recurring-payment` against `shift`
 
 ### `coin-dollar` against `coin-baht`
 
-Measured 83.1% alike at 16px, the closest cross-base pair in the set. `$` and
+Measured 82.4% alike at 16px, the closest cross-base pair in the set. `$` and
 `฿` are both a vertical stroke through a form, so this is largely inherent to
 the symbols rather than to the drawing.
 
@@ -109,13 +109,48 @@ Arabic or Hebrew.
 
 ---
 
-## 3. What the set probably does not cover
+## 3. Which mark means what
 
-21 bases and 9 modifiers compose into a lot, but the vocabulary was drawn from
+Do not decide this per screen. `@octomate/payroll-icons/concepts` holds the
+agreed answer, and the build enforces that one idea maps to one mark:
+
+```ts
+import { iconFor } from "@octomate/payroll-icons/concepts";
+
+iconFor("job order");   // "job-order"
+iconFor("requisition"); // "job-order"  — same idea, same mark
+iconFor("強積金");       // "pension-contribution"
+iconFor("PTO");         // "leave"
+```
+
+Case and separators are ignored, and a term can be the concept's name, its
+Chinese label, or any synonym. A term that belongs to two concepts fails the
+build, so a lookup never returns a choice.
+
+The table covers the vocabulary a contract-payroll product actually uses,
+including the statutory names for Hong Kong (MPF, IR56), Singapore (CPF, SDL,
+FWL, IR8A) and Malaysia (EPF, SOCSO, EIS, PCB). The same idea in three
+jurisdictions resolves to the same mark — a provident fund is a provident fund.
+
+## 4. What the set probably does not cover
+
+23 bases and 9 modifiers compose into a lot, but the vocabulary was drawn from
 one reading of the domain. Gaps will show up as "there's no icon for…".
 
-Groups that exist today: documents, time, money, statutory, organisation,
-process. Things a payroll product might want that have no mark:
+The concept table already names them. `approximated` lists every concept that
+borrows the nearest mark rather than owning one, and `npm run icons` prints the
+count on every build, so the backlog cannot quietly grow:
+
+```ts
+import { approximated } from "@octomate/payroll-icons/concepts";
+```
+
+Today that is 13, and the pattern in them is worth reading: `billing-rate` and
+`margin` are both "amount per unit", which modifiers cannot express; `sdl`,
+`fwl`, `socso` and `eis` are all levies and social insurance borrowing the
+generic `shield`, and Malaysia lands in the second half of the year.
+
+Other things a payroll product might want that have no mark:
 
 - expense claims as distinct from reimbursement
 - probation, notice period, contract expiry
@@ -130,7 +165,7 @@ filled form. Adding a modifier is cheaper and adds a state to every base at once
 
 ---
 
-## 4. Making the feedback usable
+## 5. Making the feedback usable
 
 Vague feedback about icons is very hard to act on. Two things make it concrete:
 
@@ -156,7 +191,7 @@ more than a description.
 
 ---
 
-## 5. What is cheap to change, and what is not
+## 6. What is cheap to change, and what is not
 
 **Cheap now, while the major version is 0:**
 
@@ -177,7 +212,7 @@ cannot be withdrawn. Anything shipped is shipped.
 
 ---
 
-## 6. Running the checks yourself
+## 7. Running the checks yourself
 
 ```bash
 npm test                  # 35 tests, including the geometry snapshot

@@ -21,6 +21,10 @@
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { optimize } from "svgo";
+import { findTightGaps } from "./gaps.mjs";
+
+/** Edge-to-edge, in grid units. See the gap check in readMaster for why 0.4. */
+const MIN_GAP = 0.4;
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const ICONS = join(ROOT, "icons");
@@ -79,6 +83,34 @@ function readMaster(dir, name, { canvas = 24, optional = false, solid = false } 
     if (d) data.push(d);
   }
   if (!data.length) errors.push(`${dir}/${name}.svg has no path data`);
+
+  /*
+   * Two strokes a fraction of a unit apart do not read as two strokes — they
+   * fill in and read as one smudge, first at the size the icon is used most.
+   * Shapes that meet outright are left alone; only a gap too small to see is a
+   * defect. Solid masters are areas, not traced lines, so they are exempt.
+   *
+   * MIN_GAP is not arbitrary: a glyph inside the 4.25-unit badge disc cannot do
+   * better than about 0.45, so anything tighter is a drawing slip rather than a
+   * constraint the grid imposed.
+   */
+  if (!solid && data.length) {
+    const strokeWidth = canvas === 16 ? 1.25 : 1.5;
+    try {
+      for (const g of findTightGaps(data, {
+        strokeWidth,
+        minGap: MIN_GAP,
+        label: `${dir}/${name}`,
+      })) {
+        errors.push(
+          `${dir}/${name}.svg: strokes ${g.pair} come within ${g.gap} units near ` +
+            `(${g.at[0]}, ${g.at[1]}) — under ${MIN_GAP} they merge; separate them or join them`,
+        );
+      }
+    } catch (err) {
+      errors.push(`${dir}/${name}.svg: gap check could not read the geometry — ${err.message}`);
+    }
+  }
 
   if (solid) {
     if (!/fill="currentColor"/.test(raw)) {
@@ -257,6 +289,52 @@ for (const c of manifest.compositions) {
   }
   if (modifier.glyph && base.conflicts == null && c.base.includes(modifier.glyph)) {
     warnings.push(`"${c.name}" may duplicate the ${modifier.glyph} glyph — check it by eye`);
+  }
+}
+
+/* ----------------------------------------------------------- concepts */
+
+/*
+ * The concept table is what stops two screens showing the same idea with two
+ * different marks. Its whole value is the one-to-one rule, so the rule is
+ * checked rather than trusted: every concept must name an icon that exists, and
+ * a search term may belong to one concept only — a word that resolves to two
+ * marks sends whoever typed it back to guessing.
+ */
+const conceptFile = JSON.parse(readFileSync(join(ICONS, "concepts.json"), "utf8"));
+const concepts = conceptFile.concepts;
+const iconNames = new Set([
+  ...Object.keys(manifest.bases),
+  ...manifest.compositions.map((c) => c.name),
+  ...Object.keys(manifest.currencies).map((c) => `coin-${c}`),
+]);
+const termOwner = new Map();
+
+/*
+ * Separators are flattened so a concept keyed "job-order" is still found by
+ * someone typing "job order". Without it every hyphenated key needs its own
+ * spaced alias, which is a rule nobody remembers and the table quietly rots.
+ */
+const normalise = (s) =>
+  s
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
+
+for (const [name, c] of Object.entries(concepts)) {
+  if (!iconNames.has(c.icon)) {
+    errors.push(`concept "${name}" points at "${c.icon}", which is not an icon`);
+  }
+  // the Chinese label is a search term too — it is what half the team will type
+  for (const term of [name, c.zh, ...(c.also ?? [])]) {
+    const key = normalise(term);
+    if (termOwner.has(key) && termOwner.get(key) !== name) {
+      errors.push(
+        `search term "${term}" is claimed by both "${termOwner.get(key)}" and "${name}" — ` +
+          `a term has to resolve to one mark`,
+      );
+    }
+    termOwner.set(key, name);
   }
 }
 
@@ -591,6 +669,78 @@ ${icons.map((i) => `export { ${pascal(i.name)} } from "./defs/${pascal(i.name)}.
 `,
 );
 
+/*
+ * concepts — data only, and deliberately not importing any component.
+ *
+ * A screen asks "which mark means a job order?", which is a question about
+ * vocabulary, not about rendering. Keeping the answer free of imports means
+ * looking it up costs nothing at runtime and drags no icons into a bundle.
+ */
+/*
+ * A core build ships fewer marks, so it must ship fewer concepts: a lookup that
+ * answers with an icon the bundle does not contain is worse than answering with
+ * nothing, because the caller has no way to tell.
+ */
+const emitted = new Set(icons.map((i) => i.name));
+const conceptEntries = Object.entries(concepts).filter(([, c]) => emitted.has(c.icon));
+writeFileSync(
+  join(GEN, "concepts.ts"),
+  `${HEADER}export interface Concept {
+  /** The icon's registry name. */
+  icon: string;
+  zh: string;
+  /** Present when the concept is specific to one jurisdiction. */
+  region?: "HK" | "SG" | "MY";
+  /**
+   * True when the concept borrows the nearest mark instead of owning one.
+   * These are the drawing backlog, not a judgement about the concept.
+   */
+  approximate?: boolean;
+  /** Other words that should find this concept. */
+  also?: readonly string[];
+}
+
+/** Every idea the set has an agreed mark for. */
+export const concepts: Readonly<Record<string, Concept>> = {
+${conceptEntries
+  .map(([name, c]) => {
+    const bits = [`icon: ${JSON.stringify(c.icon)}`, `zh: ${JSON.stringify(c.zh)}`];
+    if (c.region) bits.push(`region: ${JSON.stringify(c.region)}`);
+    if (c.approximate) bits.push("approximate: true");
+    if (c.also) bits.push(`also: ${JSON.stringify(c.also)}`);
+    return `  ${JSON.stringify(name)}: { ${bits.join(", ")} },`;
+  })
+  .join("\n")}
+};
+
+const norm = (s: string) =>
+  s
+    .trim()
+    .toLowerCase()
+    .replace(/[\\s_-]+/g, " ");
+
+/**
+ * Finds the mark for a term — the concept's own name, its Chinese label, or any
+ * synonym. Case and separators are ignored, so "job order", "Job-Order" and
+ * "job_order" all land on the same mark, and the build guarantees a term is
+ * claimed by one concept only, so there is never a choice to make here.
+ */
+export function iconFor(term: string): string | undefined {
+  const key = norm(term);
+  for (const [name, c] of Object.entries(concepts)) {
+    if (norm(name) === key || norm(c.zh) === key) return c.icon;
+    if (c.also?.some((a) => norm(a) === key)) return c.icon;
+  }
+  return undefined;
+}
+
+/** Concepts still borrowing another mark — the drawing backlog. */
+export const approximated: readonly string[] = ${JSON.stringify(
+    conceptEntries.filter(([, c]) => c.approximate).map(([n]) => n),
+  )};
+`,
+);
+
 /* public barrel */
 writeFileSync(
   join(GEN, "index.ts"),
@@ -614,4 +764,12 @@ console.log(
     (smallCount < icons.length ? " — the rest fall back to the 24px master scaled down" : "") +
     `\n  ${filledCount}/${icons.length} have a filled variant` +
     (filledCount < icons.length ? ' — the rest fall back to the outline on variant="filled"' : ""),
+);
+
+const approx = conceptEntries.filter(([, c]) => c.approximate);
+console.log(
+  `  ${conceptEntries.length} concepts mapped` +
+    (approx.length
+      ? `, ${approx.length} borrowing another mark: ${approx.map(([n]) => n).join(", ")}`
+      : ""),
 );

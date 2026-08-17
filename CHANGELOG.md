@@ -12,32 +12,103 @@ release — the drawings are still settling. The component API will not.
 
 ### Added
 
+- **A `staffing` group, with `client` and `assignment`.** Contract-payroll and
+  staffing products place a consultant at a client for a period, and the set had
+  no mark for either end of that. `client` is an office block, deliberately
+  unlike `bank`'s pediment and columns; `assignment` is a case, a silhouette
+  nothing else in the set uses.
+
+  `job-order` is **not** a third base — a job order is a placement that has not
+  been filled, which is `assignment` + the existing `pending` modifier. The same
+  composition gives `assignment-approved` and `assignment-exception`.
+
+  `client` is marked `composable: false`: its lower wing occupies the modifier
+  zone, so badging it destroys the mark. `assignment` composes cleanly.
+
 - **An Angular entry point.** `@octomate/payroll-icons/angular` exports a
   `PayrollIconComponent` and every icon as an `IconDefinition`. The geometry
   moved into a framework-free core that both runtimes consume, so a mark cannot
   drift between React and Angular.
 
+- **A minimum-gap guard in the build.** Strokes that come within 0.4 units of
+  each other without meeting now fail the build, naming the file, the stroke
+  pair and the coordinate. Geometry is sampled in pure JS (`scripts/gaps.mjs`)
+  so the check runs in the normal build rather than needing a rasteriser, and it
+  compares subpaths rather than whole `<path>` elements — separate marks inside
+  one element merge just as readily.
+
+  The 0.4 comes from the badge geometry, not from taste: a glyph inside the
+  4.25-unit modifier disc cannot clear more than about 0.45, so anything tighter
+  is a slip rather than a constraint the grid imposed.
+
+- **A concept table**, at `@octomate/payroll-icons/concepts`. 66 ideas, each
+  pinned to exactly one mark, so two screens showing the same thing cannot show
+  it differently. `iconFor(term)` resolves a concept name, its Chinese label or
+  any synonym, ignoring case and separators — `"job order"`, `"job-order"`,
+  `"requisition"` and `"職缺"` all land on `job-order`. The build fails if a
+  concept names an icon that does not exist, or if a term is claimed twice: a
+  word that resolves to two marks sends whoever typed it back to guessing.
+
+  It covers the statutory vocabulary of all three jurisdictions — MPF and IR56
+  for Hong Kong, CPF, SDL, FWL and IR8A for Singapore, EPF, SOCSO, EIS and PCB
+  for Malaysia — and the same idea in three countries resolves to one mark.
+
+  `approximated` lists the concepts still borrowing the nearest mark instead of
+  owning one, and the build prints the count. It is 13 today, which is the
+  drawing backlog stated as data rather than as a paragraph someone has to
+  remember to update.
+
+- **A shape canon, and `npm run shapes` to audit against it.** Recurring shapes
+  now have one value each: the large circle is 8.2 at 24 and 5.5 at 16, a
+  container corner 2.5 and 1.5, a small element corner 1.5 and 1.0. The script
+  prints every radius in use grouped by the job it does. It reports rather than
+  fails — `ledger`'s squarer page edge is deliberate, and a gate that cried wolf
+  about it would train everyone to ignore the gate.
+
 - `npm run confusability`, which rasterises every icon at 16px and scores each
   pair on shared ink, separating pairs that are alike by design from marks that
   genuinely collide.
-- A test suite. 35 tests covering the runtime's behaviour — size and stroke
+- A test suite. 47 tests covering the runtime's behaviour — size and stroke
   resolution, optical master selection, the filled variant and its fallback,
-  the accessibility contract, mask-id uniqueness — and a snapshot of every
-  path array, which is the only thing that catches a drawing changing when it
-  should not have.
+  the accessibility contract, mask-id uniqueness — the path sampler behind the
+  gap guard, and a snapshot of every path array, which is the only thing that
+  catches a drawing changing when it should not have.
 
 ### Changed
+
+- **Redrawn to clear the new gap threshold.** Fourteen masters had strokes a
+  fraction of a unit apart, which fills in and reads as one thick smudge at the
+  sizes these icons are used:
+
+  - `exception` at 16 had 0.11 units between the stem and the dot, so it drew a
+    plain vertical line rather than an exclamation mark.
+  - `tax-form` at 16 had 0.04 between a counter and the slash. The percent could
+    not be given room beside the container's rule, so the small master now drops
+    the rule — which is what a separate optical master is for.
+  - `timesheet` at 16 had 0.05 between the clock and the box floor; the clock
+    did not fit and is now smaller.
+  - `team` at both sizes had a hairline between head and shoulders, the worst of
+    both worlds — neither a clean join nor a clean separation.
+  - `pay-run`, `approved`, and the `dollar`, `yen`, `rupiah`, `baht`, `peso` and
+    `dong` coins were adjusted for the same reason.
+
+  No mark changed silhouette; the geometry snapshot records the exact paths.
+
+- **Recurring shapes brought onto the canon.** `clock` (8.5) and `pay-run` (8.4)
+  now use the large-circle radius of 8.2 that the ten coins already shared —
+  twelve marks had carried three radii for what the eye reads as one circle.
+  `documents`, `banknote`, `assignment` and `ledger`'s spine moved onto the
+  container-corner radius. Every bounding box is unchanged; only the corners
+  and the two circles moved, by fractions of a unit.
 
 - TypeScript held at 5.9. Angular's compiler-cli pins `typescript` below 6.1,
   so shipping an Angular entry point means tracking the TypeScript the Angular
   toolchain supports. Nothing is lost: TypeScript 7 emitted byte-identical
   `.js` and `.d.ts`.
-- Toolchain brought current: Vite 8, Vitest 4, plugin-react 6, Vite 8, Vitest 4, plugin-react 6,
-  and the GitHub Actions moved up a major each, with CI on Node 24. The
-  published output is unaffected — the emitted `.js` and `.d.ts` are byte for
-  byte what TypeScript 5.9 produced; only the source maps differ, since those
-  encode the compiler.
-
+- Toolchain brought current: Vite 8, Vitest 4, plugin-react 6, and the GitHub
+  Actions moved up a major each, with CI on Node 24. The published output is
+  unaffected — the emitted `.js` and `.d.ts` are byte for byte what TypeScript
+  5.9 produced; only the source maps differ, since those encode the compiler.
 - `contract` redrawn at 16 units: one rule instead of two, and a larger
   signature. It scored 84.9% similar to `invoice` at 16px, the closest
   cross-base pair, and that similarity propagated to every composed mark built
@@ -49,6 +120,7 @@ release — the drawings are still settling. The component API will not.
   the field actually does: curate a starting subset. `npm run icons:free` is
   now `npm run icons:core`.
 - `homepage` now points at the documentation site rather than the README.
+
 
 ## [0.1.0] — 2026-08-09
 
