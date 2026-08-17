@@ -10,6 +10,8 @@ release — the drawings are still settling. The component API will not.
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-17
+
 ### Added
 
 - **A `staffing` group, with `client` and `assignment`.** Contract-payroll and
