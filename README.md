@@ -1,6 +1,6 @@
 # Payroll Icon System
 
-**59 icons** for payroll, time and attendance, statutory contributions, staffing,
+**63 icons** for payroll, time and attendance, statutory contributions, staffing,
 billing and payments — each in two optical sizes and two weights.
 
 Generic icon sets give you one `file-text` for a payslip, an invoice, a receipt and a
@@ -39,7 +39,7 @@ Two kinds of mark, combined at build time.
 
 **Bases** are the nouns — `payslip`, `invoice`, `coin`, `calendar`, `employee`, `bank`.
 **Modifiers** are the states — `approved`, `pending`, `recurring`, `exception`, `locked`,
-`up`, `down`, `plus`, `minus`.
+`draft`, `up`, `down`, `plus`, `minus`.
 
 A modifier occupies the reserved 10 × 10 zone at the bottom right. The base is masked with a
 5.5u knockout disc so the badge stays legible without any colour change:
@@ -60,7 +60,7 @@ adds a row of new states across every base.
 
 `npm run confusability` rasterises every icon at 16px — where the set is
 hardest to read — and scores each pair on shared ink. Median similarity across
-1,326 pairs is about 22%.
+1,830 pairs is about 22%.
 
 Read the output carefully. Two marks built from the same base are *supposed* to
 be close: `deduction` and `bonus` are `coin + down` and `coin + plus`, and
@@ -79,7 +79,7 @@ are not remotely confusable to a reader.
 Both were found by drawing the set, and both fail CI rather than living in a style guide.
 
 **Display-only bases cannot be badged.** A wide, short shape like `banknote` loses a run of
-its bottom edge to the knockout instead of a corner, and reads as damaged. Six bases are
+its bottom edge to the knockout instead of a corner, and reads as damaged. Eight bases are
 marked `composable: false` in [`icons/manifest.json`](icons/manifest.json); composing one is
 a build error.
 
@@ -171,13 +171,13 @@ For selected and tab-bar states. Every mark has one, at both optical sizes:
 Two mechanisms produce it, and which one a mark uses is a property of its shape,
 not a policy:
 
-**Derived** (34 marks). The outer path becomes a solid body and the detail
+**Derived** (36 marks). The outer path becomes a solid body and the detail
 strokes are masked out of it. No new artwork, and the filled form can never
 drift from the outline because it *is* the outline. Declared as
 `fill: { container, skip }` in the manifest. Currency coins derive for free —
 a ring with its glyph inside is exactly the shape the derivation wants.
 
-**Drawn** (20 marks). Everything the derivation cannot reach: a calendar's tabs
+**Drawn** (27 marks). Everything the derivation cannot reach: a calendar's tabs
 sit above its box, a person's shoulders outside their head, and `bank`,
 `exchange`, `balance`, `pay-run` have no closed outer path at all. These live in
 `icons/bases-filled/` as solid silhouettes with counters as even-odd subpaths.
@@ -355,10 +355,10 @@ remember to update, and `npm run icons` prints the count on every build.
 
 ```
 icons/
-  bases/*.svg        23 authored 24-unit masters — the source of truth
-  bases-16/*.svg     23 authored 16-unit masters
-  modifiers/*.svg     9 authored 24-unit masters
-  modifiers-16/*.svg  9 authored 16-unit masters
+  bases/*.svg        24 authored 24-unit masters — the source of truth
+  bases-16/*.svg     24 authored 16-unit masters
+  modifiers/*.svg    10 authored 24-unit masters
+  modifiers-16/*.svg 10 authored 16-unit masters
   bases-filled/*.svg      13 drawn solid masters, for shapes the fill cannot derive
   bases-filled-16/*.svg   13 of those at 16 units
   currency/*.svg      9 currency coins — complete icons, ring plus glyph
@@ -462,7 +462,7 @@ here, so anyone can compose the rest in a few minutes.
 
 `set` in the manifest curates rather than gates:
 
-- **core** (31) — the marks nearly every payroll product needs: all 23 bases,
+- **core** (35) — the marks nearly every payroll product needs: all 24 bases,
   plus the states that come up immediately.
 - **extended** (28) — the long tail. Currency coins, and the composed states a
   product reaches for once the basics are in place.

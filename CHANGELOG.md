@@ -29,6 +29,24 @@ release — the drawings are still settling. The component API will not.
   `payroll-run-draft` and `assignment-draft` replace it. The backlog of
   concepts borrowing another mark drops from 13 to 12.
 
+- **`social-insurance`, and `levy` from composition.** SOCSO, EIS, SDL and FWL
+  were all borrowing the generic `shield`, which meant four different statutory
+  schemes drew the same mark — and Malaysia, where SOCSO and EIS appear on the
+  same payslip, lands in the second half of the year.
+
+  `social-insurance` is a figure inside the shield: protection of a person. It
+  derives its filled form from the outline, so it needed no drawn solid.
+
+  `levy` needed no drawing at all. A levy is a statutory outflow, and `down`
+  already means 扣除 / 支出, so `shield + down` says it — which is exactly the
+  rule this repo tells everyone else to follow before adding a base. It scores
+  87.0% against `pension-contribution` (`shield + up`), which is the same
+  relationship `deduction` and `allowance` have on `coin` at 88.7%: same base,
+  different badge, and the badge is the whole point.
+
+  The statutory family now reads as one system — down is money out, up is money
+  in, a figure inside is protection. Concepts borrowing another mark: 12 to 8.
+
 ## [0.2.0] — 2026-08-17
 
 ### Added

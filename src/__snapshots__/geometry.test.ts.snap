@@ -495,6 +495,16 @@ exports[`geometry snapshot > pins every path array 1`] = `
   "shieldPaths16": [
     "M8 1.4 2.9 3.7v3.9c0 3.2 2.2 6.1 5.1 6.9 2.9-.8 5.1-3.7 5.1-6.9V3.7z",
   ],
+  "socialInsurancePaths": [
+    "M12 2.4 4.6 5.7v5.6c0 4.6 3.2 8.8 7.4 9.9 4.2-1.1 7.4-5.3 7.4-9.9V5.7z",
+    "M10.3 10.8a1.7 1.7 0 1 0 3.4 0 1.7 1.7 0 1 0-3.4 0",
+    "M8.8 17a3.2 3.2 0 0 1 6.4 0",
+  ],
+  "socialInsurancePaths16": [
+    "M8 1.4 2.9 3.7v3.9c0 3.2 2.2 6.1 5.1 6.9 2.9-.8 5.1-3.7 5.1-6.9V3.7z",
+    "M6.9 7.3a1.1 1.1 0 1 0 2.2 0 1.1 1.1 0 1 0-2.2 0",
+    "M6 11.3a2 2 0 0 1 4 0",
+  ],
   "statementPaths": [
     "M6.5 2h11A2.5 2.5 0 0 1 20 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2",
     "M7.5 6.5h6",
@@ -621,6 +631,7 @@ exports[`geometry snapshot > pins the icon list and how each is composed 1`] = `
   "exchange core exchange - true true",
   "balance core balance - true true",
   "shield core shield - true true",
+  "social-insurance core social-insurance - true true",
   "employee core employee - true true",
   "team core team - true true",
   "org-chart core org-chart - true true",
@@ -632,6 +643,7 @@ exports[`geometry snapshot > pins the icon list and how each is composed 1`] = `
   "invoice-exception core invoice exception true true",
   "deduction core coin down true true",
   "allowance core coin up true true",
+  "levy core shield down true true",
   "pay-run-draft core pay-run draft true true",
   "assignment-draft core assignment draft true true",
   "job-order core assignment pending true true",

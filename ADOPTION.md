@@ -82,8 +82,8 @@ SGD, AUD, HKD, TWD, NZD and CAD, because a dollar sign genuinely cannot
 distinguish them. The product is expected to carry the code in text. *Watch for:*
 a screen where the code is not shown and the currency is ambiguous.
 
-**Six bases cannot take a badge** — `statement`, `banknote`, `exchange`,
-`balance`, `team`, `org-chart`. Their shapes lose an edge rather than a corner
+**Eight bases cannot take a badge** — `statement`, `banknote`, `exchange`,
+`balance`, `team`, `org-chart`, `client`, `social-insurance`. Their shapes lose an edge rather than a corner
 to the knockout. *Watch for:* needing a state on one of them, e.g. "headcount
 approved". The answer is usually to badge something else, but if it keeps
 happening the shape needs redrawing.
@@ -134,7 +134,7 @@ jurisdictions resolves to the same mark — a provident fund is a provident fund
 
 ## 4. What the set probably does not cover
 
-23 bases and 9 modifiers compose into a lot, but the vocabulary was drawn from
+24 bases and 10 modifiers compose into a lot, but the vocabulary was drawn from
 one reading of the domain. Gaps will show up as "there's no icon for…".
 
 The concept table already names them. `approximated` lists every concept that
@@ -145,10 +145,18 @@ count on every build, so the backlog cannot quietly grow:
 import { approximated } from "@octomate/payroll-icons/concepts";
 ```
 
-Today that is 13, and the pattern in them is worth reading: `billing-rate` and
-`margin` are both "amount per unit", which modifiers cannot express; `sdl`,
-`fwl`, `socso` and `eis` are all levies and social insurance borrowing the
-generic `shield`, and Malaysia lands in the second half of the year.
+Today that is 8. The statutory ones are gone: `socso` and `eis` have
+`social-insurance`, and `sdl` and `fwl` have `levy`, which cost no new drawing
+at all — a levy is a statutory outflow, so `shield + down` already said it. The
+whole family now reads as one system: down is money out, up is money in, and a
+figure inside the shield is protection of a person.
+
+What is left has a pattern of its own. `billing-rate` and `margin` are both
+"amount per unit" or "difference between two amounts", which modifiers cannot
+express because a modifier is a state, not an operation — those two are the
+ones that genuinely need new bases. The rest are near neighbours that may
+simply be fine: a bank file is the artefact that causes a disbursement, and a
+client's department really is an org unit.
 
 Other things a payroll product might want that have no mark:
 

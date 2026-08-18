@@ -125,6 +125,15 @@
       "fill": { "container": 0 }
     },
 
+    "social-insurance": {
+      "zh": "社會保險",
+      "group": "statutory",
+      "composable": false,
+      "set": "core",
+      "fill": { "container": 0 },
+      "note": "the figure's right shoulder sits in the modifier zone"
+    },
+
     "employee": { "zh": "員工", "group": "organisation", "composable": true, "set": "core" },
     "team": {
       "zh": "團隊 / 人數",
@@ -227,6 +236,13 @@
     { "name": "deduction", "base": "coin", "modifier": "down", "zh": "扣除額", "set": "core" },
     { "name": "allowance", "base": "coin", "modifier": "up", "zh": "津貼 / 加給", "set": "core" },
 
+    {
+      "name": "levy",
+      "base": "shield",
+      "modifier": "down",
+      "zh": "法定徵費",
+      "set": "core"
+    },
     {
       "name": "pay-run-draft",
       "base": "pay-run",

@@ -321,17 +321,15 @@
       "also": ["central provident fund", "中央公積金"]
     },
     "sdl": {
-      "icon": "shield",
+      "icon": "levy",
       "zh": "技能發展徵費",
       "region": "SG",
-      "approximate": true,
       "also": ["skills development levy", "徵費"]
     },
     "fwl": {
-      "icon": "shield",
+      "icon": "levy",
       "zh": "外勞徵費",
       "region": "SG",
-      "approximate": true,
       "also": ["foreign worker levy", "外勞稅"]
     },
     "ir8a": {
@@ -348,17 +346,15 @@
       "also": ["employees provident fund", "KWSP"]
     },
     "socso": {
-      "icon": "shield",
+      "icon": "social-insurance",
       "zh": "社會保險",
       "region": "MY",
-      "approximate": true,
       "also": ["PERKESO", "social security", "社險"]
     },
     "eis": {
-      "icon": "shield",
+      "icon": "social-insurance",
       "zh": "就業保險",
       "region": "MY",
-      "approximate": true,
       "also": ["employment insurance scheme", "SIP"]
     },
     "pcb": {
