@@ -239,9 +239,8 @@
       "also": ["account statement", "月結單"]
     },
     "margin": {
-      "icon": "balance",
+      "icon": "margin",
       "zh": "毛利 / 價差",
-      "approximate": true,
       "also": ["gross margin", "spread", "margin report", "毛利率"]
     },
     "ledger": {

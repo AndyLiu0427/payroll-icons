@@ -82,8 +82,8 @@ SGD, AUD, HKD, TWD, NZD and CAD, because a dollar sign genuinely cannot
 distinguish them. The product is expected to carry the code in text. *Watch for:*
 a screen where the code is not shown and the currency is ambiguous.
 
-**Eight bases cannot take a badge** — `statement`, `banknote`, `exchange`,
-`balance`, `team`, `org-chart`, `client`, `social-insurance`. Their shapes lose an edge rather than a corner
+**Nine bases cannot take a badge** — `statement`, `banknote`, `exchange`,
+`balance`, `margin`, `team`, `org-chart`, `client`, `social-insurance`. Their shapes lose an edge rather than a corner
 to the knockout. *Watch for:* needing a state on one of them, e.g. "headcount
 approved". The answer is usually to badge something else, but if it keeps
 happening the shape needs redrawing.
@@ -134,7 +134,7 @@ jurisdictions resolves to the same mark — a provident fund is a provident fund
 
 ## 4. What the set probably does not cover
 
-24 bases and 10 modifiers compose into a lot, but the vocabulary was drawn from
+25 bases and 10 modifiers compose into a lot, but the vocabulary was drawn from
 one reading of the domain. Gaps will show up as "there's no icon for…".
 
 The concept table already names them. `approximated` lists every concept that
@@ -145,18 +145,23 @@ count on every build, so the backlog cannot quietly grow:
 import { approximated } from "@octomate/payroll-icons/concepts";
 ```
 
-Today that is 8. The statutory ones are gone: `socso` and `eis` have
-`social-insurance`, and `sdl` and `fwl` have `levy`, which cost no new drawing
-at all — a levy is a statutory outflow, so `shield + down` already said it. The
-whole family now reads as one system: down is money out, up is money in, and a
-figure inside the shield is protection of a person.
+Today that is 7, and every one that is left is a near neighbour rather than a
+hole: a bank file is the artefact that causes a disbursement, a client's
+department really is an org unit, a contract period and a public holiday really
+are dates. Those may simply be fine.
 
-What is left has a pattern of its own. `billing-rate` and `margin` are both
-"amount per unit" or "difference between two amounts", which modifiers cannot
-express because a modifier is a state, not an operation — those two are the
-ones that genuinely need new bases. The rest are near neighbours that may
-simply be fine: a bank file is the artefact that causes a disbursement, and a
-client's department really is an org unit.
+The one that is not fine is **`billing-rate`**, and it is worth saying why it
+was left alone. Three marks were drawn for it and all three were rejected by
+looking at them: money-over-time drawn as a diagonal fraction renders as a
+literal `%`, which `tax-form` already owns; drawn as a stacked fraction it
+renders as `÷` and turns to mush at 16px; and a price tag is legible but in
+software a tag means *label*. Sharing `coin` with a text label beside it is
+better than any of those, so `billing-rate` keeps `coin` on purpose rather than
+by omission.
+
+`margin` did get its own mark — two levels with an arrow between them, the
+spread — because "the difference between two amounts" has a shape and "amount
+per unit of time" does not.
 
 Other things a payroll product might want that have no mark:
 

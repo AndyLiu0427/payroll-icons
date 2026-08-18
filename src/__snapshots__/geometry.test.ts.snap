@@ -341,6 +341,28 @@ exports[`geometry snapshot > pins every path array 1`] = `
     "M10 11.4h3.2a.7.7 0 0 1 .7.7v1.5a.7.7 0 0 1-.7.7H10a.7.7 0 0 1-.7-.7v-1.5a.7.7 0 0 1 .7-.7",
     "M10.2 11.4v-.7a1.4 1.4 0 0 1 2.8 0v.7",
   ],
+  "marginPaths": [
+    "M3.5 6.5h17",
+    "M3.5 19.5h17",
+    "M12 17.3V9.8",
+    "M9.4 12.4 12 9.8l2.6 2.6",
+  ],
+  "marginPaths16": [
+    "M2 4.5h12",
+    "M2 13.5h12",
+    "M8 11.8V6.6",
+    "M6.2 8.4 8 6.6l1.8 1.8",
+  ],
+  "marginSolidPaths": [
+    "M3.5 5.75h17v1.5h-17z",
+    "M3.5 18.75h17v1.5h-17z",
+    "m12 9.2 3.4 3.4h-1.9v4.9h-3v-4.9H8.6z",
+  ],
+  "marginSolidPaths16": [
+    "M2 3.88h12v1.25H2z",
+    "M2 12.88h12v1.24H2z",
+    "m8 6 2.6 2.6H9.3V12H6.7V8.6H5.4z",
+  ],
   "minusModifierPaths": [
     "M13.25 17.5a4.25 4.25 0 1 0 8.5 0 4.25 4.25 0 1 0-8.5 0",
     "M15.3 17.5h4.4",
@@ -629,6 +651,7 @@ exports[`geometry snapshot > pins the icon list and how each is composed 1`] = `
   "banknote core banknote - true true",
   "bank core bank - true true",
   "exchange core exchange - true true",
+  "margin core margin - true true",
   "balance core balance - true true",
   "shield core shield - true true",
   "social-insurance core social-insurance - true true",

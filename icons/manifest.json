@@ -109,6 +109,13 @@
       "set": "core",
       "note": "arrows span the full width"
     },
+    "margin": {
+      "zh": "毛利 / 價差",
+      "group": "money",
+      "composable": false,
+      "set": "core",
+      "note": "both rules run the full width — the knockout would eat a run of the lower one"
+    },
     "balance": {
       "zh": "對帳 / 平衡",
       "group": "money",

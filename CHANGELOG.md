@@ -47,6 +47,18 @@ release — the drawings are still settling. The component API will not.
   The statutory family now reads as one system — down is money out, up is money
   in, a figure inside is protection. Concepts borrowing another mark: 12 to 8.
 
+- **`margin`** — two levels with an arrow between them, the spread. It had been
+  borrowing `balance`, which is a pair of scales and means reconciliation.
+
+  `billing-rate` deliberately did **not** get one. Three marks were drawn and
+  all three failed on sight: money-over-time as a diagonal fraction renders as a
+  literal `%`, which `tax-form` owns; as a stacked fraction it renders as `÷`
+  and is mush at 16px; a price tag is legible but reads as *label* in software.
+  Sharing `coin` beside a text label beats all three. "The difference between
+  two amounts" has a shape; "amount per unit of time" does not.
+
+  Concepts borrowing another mark: 8 to 7.
+
 ## [0.2.0] — 2026-08-17
 
 ### Added
