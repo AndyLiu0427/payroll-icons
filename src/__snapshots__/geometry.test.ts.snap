@@ -235,6 +235,14 @@ exports[`geometry snapshot > pins every path array 1`] = `
     "M11.6 9.4v4",
     "m9.9 11.7 1.7 1.7 1.7-1.7",
   ],
+  "draftModifierPaths": [
+    "m14.6 20.4.42-2.97 2.83-2.83 2.55 2.55-2.83 2.83z",
+    "m15.02 17.43 2.55 2.55",
+  ],
+  "draftModifierPaths16": [
+    "m9.4 13.8.65-2.3 2-2 1.65 1.65-2 2z",
+    "m10.05 11.5 1.65 1.65",
+  ],
   "employeePaths": [
     "M8.6 8a3.4 3.4 0 1 0 6.8 0 3.4 3.4 0 1 0-6.8 0",
     "M4.4 20a7.6 7.6 0 0 1 15.2 0",
@@ -624,6 +632,8 @@ exports[`geometry snapshot > pins the icon list and how each is composed 1`] = `
   "invoice-exception core invoice exception true true",
   "deduction core coin down true true",
   "allowance core coin up true true",
+  "pay-run-draft core pay-run draft true true",
+  "assignment-draft core assignment draft true true",
   "job-order core assignment pending true true",
   "assignment-approved core assignment approved true true",
   "assignment-exception core assignment exception true true",

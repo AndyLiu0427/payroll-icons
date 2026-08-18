@@ -1,17 +1,10 @@
 {
   "$comment": "Which mark stands for which idea. One concept resolves to exactly one icon, so the same thing looks the same in every screen that shows it. Search terms live in `also`; a term may appear once across the whole file, since a word that points at two marks helps nobody. `approximate: true` marks a concept borrowing the nearest mark rather than owning one — those are the drawing backlog, and `npm run icons` prints the count.",
-
   "concepts": {
     "payslip": {
       "icon": "payslip",
       "zh": "薪資單",
       "also": ["pay statement", "salary slip", "工資單", "糧單"]
-    },
-    "payslip-draft": {
-      "icon": "payslip-pending",
-      "zh": "薪資單草稿",
-      "approximate": true,
-      "also": ["draft payslip"]
     },
     "payslip-released": {
       "icon": "payslip-approved",
@@ -28,6 +21,11 @@
       "icon": "pay-run-recurring",
       "zh": "定期薪資批次",
       "also": ["scheduled payroll"]
+    },
+    "payroll-run-draft": {
+      "icon": "pay-run-draft",
+      "zh": "薪資批次草稿",
+      "also": ["draft payroll run", "draft run", "unprocessed run", "草稿批次"]
     },
     "off-cycle-run": {
       "icon": "pay-run",
@@ -50,9 +48,21 @@
       "zh": "薪資項目",
       "also": ["pay component", "earning", "薪資科目"]
     },
-    "deduction": { "icon": "deduction", "zh": "扣除額", "also": ["deductions", "扣款"] },
-    "allowance": { "icon": "allowance", "zh": "津貼 / 加給", "also": ["allowances", "加給"] },
-    "bonus": { "icon": "bonus", "zh": "獎金", "also": ["incentive", "13th month", "花紅"] },
+    "deduction": {
+      "icon": "deduction",
+      "zh": "扣除額",
+      "also": ["deductions", "扣款"]
+    },
+    "allowance": {
+      "icon": "allowance",
+      "zh": "津貼 / 加給",
+      "also": ["allowances", "加給"]
+    },
+    "bonus": {
+      "icon": "bonus",
+      "zh": "獎金",
+      "also": ["incentive", "13th month", "花紅"]
+    },
     "reimbursement": {
       "icon": "reimbursement",
       "zh": "費用核銷",
@@ -70,10 +80,22 @@
       "zh": "撥款 / 匯出",
       "also": ["payout", "remittance"]
     },
-    "deposit": { "icon": "deposit", "zh": "入帳 / 收款", "also": ["incoming payment", "收款"] },
-    "bank-account": { "icon": "bank", "zh": "銀行帳戶", "also": ["account details", "銀行資料"] },
+    "deposit": {
+      "icon": "deposit",
+      "zh": "入帳 / 收款",
+      "also": ["incoming payment", "收款"]
+    },
+    "bank-account": {
+      "icon": "bank",
+      "zh": "銀行帳戶",
+      "also": ["account details", "銀行資料"]
+    },
 
-    "client": { "icon": "client", "zh": "客戶公司", "also": ["customer company", "hirer", "客戶"] },
+    "client": {
+      "icon": "client",
+      "zh": "客戶公司",
+      "also": ["customer company", "hirer", "客戶"]
+    },
     "client-department": {
       "icon": "org-chart",
       "zh": "客戶部門",
@@ -85,7 +107,11 @@
       "zh": "派遣顧問",
       "also": ["contractor", "placed worker", "顧問", "員工"]
     },
-    "headcount": { "icon": "team", "zh": "人數", "also": ["team size", "workforce", "團隊"] },
+    "headcount": {
+      "icon": "team",
+      "zh": "人數",
+      "also": ["team size", "workforce", "團隊"]
+    },
     "assignment": {
       "icon": "assignment",
       "zh": "派遣指派",
@@ -101,12 +127,21 @@
       "zh": "指派異常",
       "also": ["placement dispute"]
     },
+    "assignment-draft": {
+      "icon": "assignment-draft",
+      "zh": "指派草稿",
+      "also": ["draft placement", "unconfirmed assignment", "草稿指派"]
+    },
     "job-order": {
       "icon": "job-order",
       "zh": "職缺需求單",
       "also": ["requisition", "open role", "vacancy", "職缺"]
     },
-    "contract": { "icon": "contract", "zh": "合約", "also": ["agreement", "合同"] },
+    "contract": {
+      "icon": "contract",
+      "zh": "合約",
+      "also": ["agreement", "合同"]
+    },
     "contract-signed": {
       "icon": "contract-signed",
       "zh": "合約已簽署",
@@ -118,7 +153,11 @@
       "approximate": true,
       "also": ["assignment period", "term dates", "約期"]
     },
-    "onboarding": { "icon": "onboarding", "zh": "到職", "also": ["start date", "joiner", "入職"] },
+    "onboarding": {
+      "icon": "onboarding",
+      "zh": "到職",
+      "also": ["start date", "joiner", "入職"]
+    },
     "offboarding": {
       "icon": "offboarding",
       "zh": "離職",
@@ -135,9 +174,21 @@
       "zh": "工時異常",
       "also": ["timesheet dispute"]
     },
-    "hours": { "icon": "clock", "zh": "時數", "also": ["worked hours", "duration", "工時"] },
-    "overtime": { "icon": "overtime", "zh": "加班", "also": ["OT", "加班費"] },
-    "shift": { "icon": "shift", "zh": "排班", "also": ["roster", "班表"] },
+    "hours": {
+      "icon": "clock",
+      "zh": "時數",
+      "also": ["worked hours", "duration", "工時"]
+    },
+    "overtime": {
+      "icon": "overtime",
+      "zh": "加班",
+      "also": ["OT", "加班費"]
+    },
+    "shift": {
+      "icon": "shift",
+      "zh": "排班",
+      "also": ["roster", "班表"]
+    },
     "leave": {
       "icon": "leave",
       "zh": "請假",
@@ -162,19 +213,47 @@
       "approximate": true,
       "also": ["charge rate", "bill rate", "費率"]
     },
-    "invoice": { "icon": "invoice", "zh": "發票 / 請款單", "also": ["bill", "請款單"] },
-    "invoice-issue": { "icon": "invoice-exception", "zh": "請款異常", "also": ["billing error"] },
-    "credit-note": { "icon": "credit-note", "zh": "折讓單", "also": ["credit memo", "折讓"] },
-    "receipt": { "icon": "receipt", "zh": "收據", "also": ["proof of payment", "收條"] },
-    "statement": { "icon": "statement", "zh": "對帳單", "also": ["account statement", "月結單"] },
+    "invoice": {
+      "icon": "invoice",
+      "zh": "發票 / 請款單",
+      "also": ["bill", "請款單"]
+    },
+    "invoice-issue": {
+      "icon": "invoice-exception",
+      "zh": "請款異常",
+      "also": ["billing error"]
+    },
+    "credit-note": {
+      "icon": "credit-note",
+      "zh": "折讓單",
+      "also": ["credit memo", "折讓"]
+    },
+    "receipt": {
+      "icon": "receipt",
+      "zh": "收據",
+      "also": ["proof of payment", "收條"]
+    },
+    "statement": {
+      "icon": "statement",
+      "zh": "對帳單",
+      "also": ["account statement", "月結單"]
+    },
     "margin": {
       "icon": "balance",
       "zh": "毛利 / 價差",
       "approximate": true,
       "also": ["gross margin", "spread", "margin report", "毛利率"]
     },
-    "ledger": { "icon": "ledger", "zh": "總帳 / 帳冊", "also": ["general ledger", "GL", "分類帳"] },
-    "ledger-locked": { "icon": "ledger-locked", "zh": "總帳鎖定", "also": ["closed books"] },
+    "ledger": {
+      "icon": "ledger",
+      "zh": "總帳 / 帳冊",
+      "also": ["general ledger", "GL", "分類帳"]
+    },
+    "ledger-locked": {
+      "icon": "ledger-locked",
+      "zh": "總帳鎖定",
+      "also": ["closed books"]
+    },
     "subscription": {
       "icon": "subscription",
       "zh": "訂閱制帳單",
@@ -185,9 +264,21 @@
       "zh": "對帳",
       "also": ["reconcile", "balancing", "核對"]
     },
-    "exchange-rate": { "icon": "exchange", "zh": "匯率", "also": ["FX", "multi-currency", "換匯"] },
-    "amount": { "icon": "coin", "zh": "金額", "also": ["value", "money", "金額欄"] },
-    "cash": { "icon": "banknote", "zh": "現金", "also": ["banknote", "現鈔"] },
+    "exchange-rate": {
+      "icon": "exchange",
+      "zh": "匯率",
+      "also": ["FX", "multi-currency", "換匯"]
+    },
+    "amount": {
+      "icon": "coin",
+      "zh": "金額",
+      "also": ["value", "money", "金額欄"]
+    },
+    "cash": {
+      "icon": "banknote",
+      "zh": "現金",
+      "also": ["banknote", "現鈔"]
+    },
 
     "statutory-contribution": {
       "icon": "shield",
@@ -199,7 +290,11 @@
       "zh": "退休金提撥",
       "also": ["retirement fund", "退休提撥"]
     },
-    "tax-form": { "icon": "tax-form", "zh": "稅務表單", "also": ["withholding form", "扣繳憑單"] },
+    "tax-form": {
+      "icon": "tax-form",
+      "zh": "稅務表單",
+      "also": ["withholding form", "扣繳憑單"]
+    },
     "tax-filed": {
       "icon": "tax-filed",
       "zh": "報稅完成",

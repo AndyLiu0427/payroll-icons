@@ -167,7 +167,8 @@
     "down": { "zh": "扣除 / 支出", "set": "core" },
     "up": { "zh": "加給 / 收入", "set": "core" },
     "plus": { "zh": "新增 / 加項", "set": "core" },
-    "minus": { "zh": "移除 / 減項", "set": "core" }
+    "minus": { "zh": "移除 / 減項", "set": "core" },
+    "draft": { "zh": "草稿 / 未送出", "set": "core" }
   },
 
   "$comment_currency": "Currency coins are named by symbol, not by ISO code: a dollar sign cannot distinguish USD from SGD from AUD, and an icon that claims to would be lying. `covers` records which currencies each mark legitimately stands for — use it to drive a picker, and let the product label carry the actual code. All of these are display-only: the glyph fills the coin, so there is no room for a badge, and you would badge the generic `coin` anyway.",
@@ -226,6 +227,20 @@
     { "name": "deduction", "base": "coin", "modifier": "down", "zh": "扣除額", "set": "core" },
     { "name": "allowance", "base": "coin", "modifier": "up", "zh": "津貼 / 加給", "set": "core" },
 
+    {
+      "name": "pay-run-draft",
+      "base": "pay-run",
+      "modifier": "draft",
+      "zh": "薪資批次草稿",
+      "set": "core"
+    },
+    {
+      "name": "assignment-draft",
+      "base": "assignment",
+      "modifier": "draft",
+      "zh": "指派草稿",
+      "set": "core"
+    },
     {
       "name": "job-order",
       "base": "assignment",

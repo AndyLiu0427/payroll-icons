@@ -10,6 +10,25 @@ release — the drawings are still settling. The component API will not.
 
 ## [Unreleased]
 
+### Added
+
+- **A `draft` modifier**, and `pay-run-draft` / `assignment-draft` with it.
+  Draft was the one state the vocabulary could not say, so `payslip-draft` had
+  been borrowing `pending` — but a draft is unsent and pending is sent and
+  waiting, which are different rows in a list and different actions to take.
+
+  The glyph is a pencil, drawn into the badge zone directly rather than inside
+  a disc, the way `locked` and `recurring` already are. Its tip sits at the
+  badge's diagonal extreme, so the weight it needed came from widening the body
+  rather than lengthening it — growing it kept the tip 0.03 units from the
+  knockout edge, against the 0.5 clear ring the disc modifiers hold.
+
+  Which marks got the state came from the server rather than from guessing:
+  `Draft` is a real status on `PayrollRun` and on `Assignment`, and there is no
+  payslip status at all. The speculative `payslip-draft` concept is gone and
+  `payroll-run-draft` and `assignment-draft` replace it. The backlog of
+  concepts borrowing another mark drops from 13 to 12.
+
 ## [0.2.0] — 2026-08-17
 
 ### Added
