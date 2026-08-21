@@ -10,6 +10,8 @@ release — the drawings are still settling. The component API will not.
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-08-21
+
 ### Added
 
 - **A `draft` modifier**, and `pay-run-draft` / `assignment-draft` with it.

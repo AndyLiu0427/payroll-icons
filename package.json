@@ -1,7 +1,7 @@
 {
   "name": "@octomate/payroll-icons",
-  "version": "0.2.0",
-  "description": "Payroll, time, statutory and billing icons built from a base \u00d7 modifier system. 24\u00d724, stroke, currentColor, animation-ready.",
+  "version": "0.3.0",
+  "description": "Payroll, time, statutory and billing icons built from a base × modifier system. 24×24, stroke, currentColor, animation-ready.",
   "keywords": [
     "icons",
     "svg",
