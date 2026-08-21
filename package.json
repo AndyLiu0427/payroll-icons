@@ -96,7 +96,7 @@
   "devDependencies": {
     "@angular/common": "^21.2.19",
     "@angular/compiler": "^21.2.19",
-    "@angular/compiler-cli": "^21.2.19",
+    "@angular/compiler-cli": "^22.1.2",
     "@angular/core": "^21.2.19",
     "@biomejs/biome": "^2.0.0",
     "@types/node": "^26.2.0",
