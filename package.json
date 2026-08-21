@@ -97,7 +97,7 @@
     "@angular/common": "^21.2.19",
     "@angular/compiler": "^21.2.19",
     "@angular/compiler-cli": "^21.2.19",
-    "@angular/core": "^21.2.19",
+    "@angular/core": "^22.1.2",
     "@biomejs/biome": "^2.0.0",
     "@types/node": "^26.2.0",
     "@types/react": "^19.0.0",
