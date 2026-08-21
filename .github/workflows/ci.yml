@@ -32,6 +32,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Every count the docs state is derived from the set, so a mark added
+      # without touching the prose fails here rather than shipping a README
+      # that confidently states the wrong number.
+      - name: Check documented figures
+        run: npm run docs
+
       - name: Build package
         run: npm run build
 

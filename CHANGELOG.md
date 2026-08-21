@@ -59,6 +59,23 @@ release — the drawings are still settling. The component API will not.
 
   Concepts borrowing another mark: 8 to 7.
 
+- **`npm run docs`**, which checks every figure the documentation states against
+  the set itself — 19 counts and 2 lists, in CI and before publish.
+
+  These had gone stale three times in one sitting: icon and base totals, the
+  core count, how many bases refuse a badge, the derived/drawn split, the
+  confusability pair count. A document that states a wrong number confidently is
+  worse than one that states none, because the reader cannot tell.
+
+  It reads the manifest and the icons directory rather than the build output, so
+  it runs before anything is generated, and it never writes — it reports the
+  file, the line, and the right value. A pattern that stops matching is a
+  failure rather than a skip: a check that quietly matches nothing looks exactly
+  like a check that passes, which is how a stale number survives a green build.
+
+  It found three on its first run, and the `%`-vs-`÷` lesson repeated in
+  miniature — the pair count had been 1,830 for a set that now has 1,891.
+
 ## [0.2.0] — 2026-08-17
 
 ### Added

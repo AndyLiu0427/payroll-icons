@@ -1,7 +1,7 @@
 {
   "name": "@octomate/payroll-icons",
   "version": "0.2.0",
-  "description": "Payroll, time, statutory and billing icons built from a base × modifier system. 24×24, stroke, currentColor, animation-ready.",
+  "description": "Payroll, time, statutory and billing icons built from a base \u00d7 modifier system. 24\u00d724, stroke, currentColor, animation-ready.",
   "keywords": [
     "icons",
     "svg",
@@ -67,6 +67,7 @@
     "figma": "npm run icons && node scripts/figma-export.mjs",
     "confusability": "node scripts/confusability.mjs",
     "shapes": "node scripts/shapes.mjs",
+    "docs": "node scripts/docs-check.mjs",
     "prebuild": "npm run icons",
     "build": "ngc -p tsconfig.build.json && cp src/animate.css dist/animate.css",
     "smoke": "node scripts/smoke.mjs",
@@ -78,7 +79,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome check --write .",
-    "prepublishOnly": "npm run build && npm test && npm run smoke"
+    "prepublishOnly": "npm run build && npm test && npm run smoke && npm run docs"
   },
   "peerDependencies": {
     "@angular/core": ">=18",

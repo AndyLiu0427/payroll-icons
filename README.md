@@ -60,7 +60,7 @@ adds a row of new states across every base.
 
 `npm run confusability` rasterises every icon at 16px — where the set is
 hardest to read — and scores each pair on shared ink. Median similarity across
-1,830 pairs is about 22%.
+1,891 pairs is about 22%.
 
 Read the output carefully. Two marks built from the same base are *supposed* to
 be close: `deduction` and `bonus` are `coin + down` and `coin + plus`, and
@@ -177,7 +177,7 @@ drift from the outline because it *is* the outline. Declared as
 `fill: { container, skip }` in the manifest. Currency coins derive for free —
 a ring with its glyph inside is exactly the shape the derivation wants.
 
-**Drawn** (27 marks). Everything the derivation cannot reach: a calendar's tabs
+**Drawn** (28 marks). Everything the derivation cannot reach: a calendar's tabs
 sit above its box, a person's shoulders outside their head, and `bank`,
 `exchange`, `balance`, `pay-run` have no closed outer path at all. These live in
 `icons/bases-filled/` as solid silhouettes with counters as even-odd subpaths.
@@ -443,6 +443,7 @@ only thing that catches a corner landing at 2.0 because that is what the editor 
 | `npm run figma` | Generate, then emit the Figma import bundle |
 | `npm run confusability` | Measure how alike any two marks look at 16px¹ |
 | `npm run shapes` | Audit recurring shapes against the canon |
+| `npm run docs` | Check every figure the docs state against the set |
 | `npm run build` | Generate, then compile the package to `dist/` |
 | `npm run dev` | Documentation site with hot reload |
 | `npm test` | Vitest — runtime behaviour and the geometry snapshot |
